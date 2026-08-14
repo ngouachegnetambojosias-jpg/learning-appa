@@ -1,0 +1,8 @@
+{
+  "name": "UPSKILL E-Learning",
+  "description": "Plateforme d'apprentissage en ligne avec cours par niveaux, épreuves, évaluations interactives, messagerie et espace d'administration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

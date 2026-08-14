@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leçon 1 - Introduction à l'informatique</title>
+    <link rel="stylesheet" href="style_lecon1.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- Menu latéral -->
+    <nav class="sidebar" id="sidebar">
+        <h2>Sommaire</h2>
+        <ul>
+            <li><a href="#partie1">1. Qu'est-ce que l'informatique ?</a></li>
+            <li><a href="#partie2">2. Historique de l'informatique</a></li>
+            <li><a href="#partie3">3. Composants d'un ordinateur</a></li>
+            <li><a href="#partie4">4. Les données en informatique</a></li>
+            <li><a href="#exercice">Exercice pratique</a></li>
+            <li><a href="#quiz">Quiz de la leçon</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="content">
+        <button class="menu-toggle" id="menu-toggle">&#9776;</button>
+
+        <header>
+            <h1>Leçon 1 : Introduction à l'informatique</h1>
+            <p>Dans cette première leçon, nous allons explorer les bases de l'informatique, son histoire et ses composants essentiels.</p>
+        </header>
+
+        <section id="partie1">
+            <h2>1. Qu'est-ce que l'informatique ?</h2>
+            <p>L'informatique est la science du traitement automatique de l'information par des machines appelées ordinateurs. Elle couvre la création, le stockage, la manipulation et la communication des données.</p>
+        </section>
+
+        <section id="partie2">
+            <h2>2. Historique de l'informatique</h2>
+            <p>L'informatique a commencé avec des inventions comme la machine de Pascal (1642) et a évolué avec Charles Babbage (« machine analytique »), jusqu'à la création des ordinateurs modernes dans les années 1940.</p>
+        </section>
+
+        <section id="partie3">
+            <h2>3. Composants d'un ordinateur</h2>
+            <ul>
+                <li><strong>Unité centrale (UC)</strong> : cerveau de l'ordinateur.</li>
+                <li><strong>Écran</strong> : pour afficher les informations.</li>
+                <li><strong>Clavier et souris</strong> : pour interagir avec l'ordinateur.</li>
+                <li><strong>Imprimante</strong> : pour sortir les documents papier.</li>
+            </ul>
+            <img src="ordinateur_composants.jpg" alt="Composants d'un ordinateur" class="image">
+        </section>
+
+        <section id="partie4">
+            <h2>4. Les données en informatique</h2>
+            <p>En informatique, les données peuvent être des textes, des images, des sons, ou des vidéos. L'ordinateur utilise un langage appelé <strong>binaire</strong> pour stocker et traiter toutes ces informations.</p>
+            <pre><code>Exemple de données binaires :
+Texte : "Bonjour" => 01000010 01101111 01101110 ...</code></pre>
+        </section>
+
+        <section id="exercice">
+            <h2>Exercice pratique</h2>
+            <p><strong>Consigne :</strong> Décrivez en quelques lignes un ordinateur que vous utilisez. Quels sont ses composants visibles ?</p>
+             <!-- Zone de réponse -->
+          <textarea id="reponse1" placeholder="Écrivez votre réponse ici..." rows="6" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+      
+          <!-- Bouton pour sauvegarder (optionnel si tu veux plus tard) -->
+          <!--<button onclick="sauvegarderReponse('reponse1')">Enregistrer</button>-->
+          <button class="btn-send" onclick="envoyerReponse('reponse1')">Envoyer la réponse</button>
+        </section>
+
+        <section id="exercice1" class="lesson">
+          <h2>Exercice 1 : Identifier les composants d'un ordinateur</h2>
+          <p>Listez les composants principaux d'un ordinateur (ex: unité centrale, écran, clavier...)</p>
+
+      </section>
+      
+        <section id="quiz">
+            <h2>Quiz de la leçon</h2>
+            <p><strong>1.</strong> Quel est le langage utilisé par les ordinateurs pour traiter les données ?</p>
+            <ul>
+                <li><input type="radio" name="q1"> Latin</li>
+                <li><input type="radio" name="q1"> Anglais</li>
+                <li><input type="radio" name="q1"> <strong>Binaire</strong></li>
+            </ul>
+
+            <p><strong>2.</strong> Quel composant est considéré comme le "cerveau" de l'ordinateur ?</p>
+            <ul>
+                <li><input type="radio" name="q2"> Écran</li>
+                <li><input type="radio" name="q2"> Clavier</li>
+                <li><input type="radio" name="q2"> <strong>Unité Centrale</strong></li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>Vous avez terminé la Leçon 1. Bravo !</p>
+        </footer>
+
+    </main>
+</div>
+
+<script src="script_lecon1.js"></script>
+</body>
+</html>

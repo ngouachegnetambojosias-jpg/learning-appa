@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Niveau 1 : Classe de 6ème - UPSKILL E-Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="/Accueil.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-500/30">U</div>
+          <div>
+            <span class="text-2xl font-black tracking-tight text-slate-900">UPSKILL</span>
+            <span class="ml-2 text-xs font-bold px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full border border-blue-100 uppercase">Niveau 1</span>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/Accueil.html" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Accueil</a>
+          <a href="/cours.php" class="px-4 py-2 rounded-lg text-sm font-bold text-blue-600 bg-blue-50">Niveaux & Cours</a>
+          <a href="/epreuves.php" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Épreuves</a>
+          <a href="/repondre_evaluation.php" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Évaluations</a>
+          <a href="/messagerie_utilisateurs.php" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Messagerie</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/cours.php" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Changer de classe</span>
+        </a>
+        <a href="/profil.php" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition">
+          Mon Compte
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-3 text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-bold">
+          🎒 Enseignement Secondaire Général & Technique
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold">Programme de 6ème (Niveau 1)</h1>
+        <p class="text-blue-100 max-w-2xl text-sm sm:text-base">
+          Découvrez les fondamentaux de l'informatique, de la bureautique moderne, de la navigation Internet responsable et de la logique Scratch.
+        </p>
+      </div>
+      <div class="flex gap-4">
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center min-w-[120px]">
+          <span class="block text-2xl font-black text-amber-300">6</span>
+          <span class="text-xs text-blue-100 font-medium">Modules complets</span>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center min-w-[120px]">
+          <span class="block text-2xl font-black text-emerald-300">24</span>
+          <span class="text-xs text-blue-100 font-medium">Leçons interactives</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Modules Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Module 1 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-full">Module 1</span>
+          <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> 4h de cours</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Introduction & Histoire de l'Informatique</h3>
+        <p class="text-sm text-slate-600">
+          Évolution des technologies, composants essentiels (unité centrale, périphériques d'entrée/sortie) et premier démarrage.
+        </p>
+        <div class="pt-2 border-t border-slate-100">
+          <ul class="text-xs text-slate-500 space-y-2 mb-4">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Définition des concepts de base</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Schéma fonctionnel d'un PC</li>
+          </ul>
+          <button onclick="openLesson('Module 1 : Histoire & Composants', 'Ce cours présente la structure matérielle d\'un ordinateur : la carte mère, le processeur (CPU), la mémoire vive (RAM) et le disque de stockage. Les périphériques d\'entrée (clavier, souris) et de sortie (écran, imprimante) permettent à l\'utilisateur d\'interagir avec le système.')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition">
+            Consulter le cours →
+          </button>
+        </div>
+      </div>
+
+      <!-- Module 2 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 bg-indigo-100 text-indigo-700 font-bold text-xs rounded-full">Module 2</span>
+          <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> 5h de cours</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Systèmes d'Exploitation & Fichiers</h3>
+        <p class="text-sm text-slate-600">
+          Manipulation du bureau, gestion des dossiers, arborescence des fichiers, renommage, déplacement et corbeille.
+        </p>
+        <div class="pt-2 border-t border-slate-100">
+          <ul class="text-xs text-slate-500 space-y-2 mb-4">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Rôle de Windows et Linux</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Organisation en dossiers</li>
+          </ul>
+          <button onclick="openLesson('Module 2 : Systèmes d\'Exploitation', 'Le système d\'exploitation (OS) est le logiciel maître qui gère le matériel et fournit une interface utilisateur graphique. L\'arborescence de fichiers permet d\'organiser les documents dans des répertoires hiérarchisés.')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition">
+            Consulter le cours →
+          </button>
+        </div>
+      </div>
+
+      <!-- Module 3 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 bg-emerald-100 text-emerald-700 font-bold text-xs rounded-full">Module 3</span>
+          <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> 6h de cours</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Logiciels de Bureautique (Traitement de texte)</h3>
+        <p class="text-sm text-slate-600">
+          Saisie de texte, mise en forme des paragraphes, insertion d'images, tableaux et enregistrement au format PDF.
+        </p>
+        <div class="pt-2 border-t border-slate-100">
+          <ul class="text-xs text-slate-500 space-y-2 mb-4">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Polices, couleurs et alignements</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> En-têtes, pieds de page et marges</li>
+          </ul>
+          <button onclick="openLesson('Module 3 : Traitement de Texte', 'Le traitement de texte permet la rédaction de documents soignés. Les règles typographiques exigent de respecter la ponctuation, les marges et la hiérarchisation des titres (Titre 1, Titre 2).')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition">
+            Consulter le cours →
+          </button>
+        </div>
+      </div>
+
+      <!-- Module 4 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 bg-amber-100 text-amber-700 font-bold text-xs rounded-full">Module 4</span>
+          <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> 4h de cours</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Internet & Navigation Web Sécurisée</h3>
+        <p class="text-sm text-slate-600">
+          Comprendre le Web, l'utilisation des moteurs de recherche (mots-clés), les règles de sécurité et la protection des données personnelles.
+        </p>
+        <div class="pt-2 border-t border-slate-100">
+          <ul class="text-xs text-slate-500 space-y-2 mb-4">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Différence Web vs Internet</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Hygiène numérique et mots de passe</li>
+          </ul>
+          <button onclick="openLesson('Module 4 : Internet & Sécurité', 'Internet est le réseau mondial interconnecté, tandis que le Web (World Wide Web) est l\'ensemble des pages accessibles via des liens hypertextes et le protocole HTTP/HTTPS. Ne partagez jamais vos mots de passe.')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition">
+            Consulter le cours →
+          </button>
+        </div>
+      </div>
+
+      <!-- Module 5 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 bg-purple-100 text-purple-700 font-bold text-xs rounded-full">Module 5</span>
+          <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> 6h de cours</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Initiation aux Algorithmes & Scratch</h3>
+        <p class="text-sm text-slate-600">
+          Notion d'instructions séquentielles, conditions simples, boucles et programmation visuelle par blocs avec Scratch.
+        </p>
+        <div class="pt-2 border-t border-slate-100">
+          <ul class="text-xs text-slate-500 space-y-2 mb-4">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Séquences et déplacements</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Création de petites animations</li>
+          </ul>
+          <button onclick="openLesson('Module 5 : Scratch & Algorithmes', 'Un algorithme est une suite finie et ordonnée d\'instructions permettant de résoudre un problème ou d\'accomplir une tâche. Dans Scratch, nous assemblons des blocs graphiques pour animer un lutin.')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition">
+            Consulter le cours →
+          </button>
+        </div>
+      </div>
+
+      <!-- Module 6 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-blue-300 transition space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 bg-rose-100 text-rose-700 font-bold text-xs rounded-full">Module 6</span>
+          <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> 3h de cours</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Sensibilisation à la Robotique</h3>
+        <p class="text-sm text-slate-600">
+          Découverte des capteurs, actionneurs et systèmes automatisés dans la vie quotidienne et l'industrie.
+        </p>
+        <div class="pt-2 border-t border-slate-100">
+          <ul class="text-xs text-slate-500 space-y-2 mb-4">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Capteurs de lumière et distance</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Moteurs et asservissements</li>
+          </ul>
+          <button onclick="openLesson('Module 6 : Robotique & Automatismes', 'Un robot est composé de capteurs (pour percevoir son environnement), d\'un contrôleur (pour traiter les données et décider), et d\'actionneurs (moteurs, bras articulés pour agir).')" class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition">
+            Consulter le cours →
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Interactive Lesson Modal -->
+  <div id="lesson-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 id="modal-title" class="text-xl font-bold text-slate-900"></h3>
+        <button onclick="closeLesson()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold">
+          ✕
+        </button>
+      </div>
+      <div class="space-y-4">
+        <div class="p-4 bg-blue-50 rounded-xl text-blue-900 text-sm leading-relaxed" id="modal-content"></div>
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500">Exercice d'application rapide :</h4>
+          <p class="text-xs text-slate-700">Révisez cette notion puis soumettez votre devoir dans l'onglet Évaluations pour obtenir une note.</p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 pt-2">
+        <button onclick="closeLesson()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm">Fermer</button>
+        <a href="/repondre_evaluation.php" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm">Passer l'évaluation →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-950 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+    <p>&copy; 2026 UPSKILL E-Learning. Tous droits réservés.</p>
+  </footer>
+
+  <script>
+    function openLesson(title, content) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-content').textContent = content;
+      document.getElementById('lesson-modal').classList.remove('hidden');
+    }
+    function closeLesson() {
+      document.getElementById('lesson-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

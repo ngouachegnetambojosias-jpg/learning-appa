@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Niveau 4 : Classe de 3ème / BEPC - UPSKILL E-Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="/Accueil.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-500/30">U</div>
+          <div>
+            <span class="text-2xl font-black tracking-tight text-slate-900">UPSKILL</span>
+            <span class="ml-2 text-xs font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 uppercase">Classe Examen BEPC</span>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/Accueil.html" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Accueil</a>
+          <a href="/cours.php" class="px-4 py-2 rounded-lg text-sm font-bold text-emerald-600 bg-emerald-50">Niveaux & Cours</a>
+          <a href="/epreuves.php" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Épreuves</a>
+          <a href="/repondre_evaluation.php" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Évaluations</a>
+          <a href="/messagerie_utilisateurs.php" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Messagerie</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/cours.php" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Changer de classe</span>
+        </a>
+        <a href="/profil.php" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition">Mon Compte</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-3 text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-bold">
+          🎯 Préparation Intensive Examen BEPC
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold">Programme de 3ème (Niveau 4)</h1>
+        <p class="text-emerald-100 max-w-2xl text-sm sm:text-base">
+          Structures de données avancées, programmation web dynamique avec JavaScript, conception de bases relationnelles et révisions complètes d'examen.
+        </p>
+      </div>
+      <div class="flex gap-4">
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center min-w-[120px]">
+          <span class="block text-2xl font-black text-amber-300">6</span>
+          <span class="text-xs text-emerald-100 font-medium">Modules d'examen</span>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center min-w-[120px]">
+          <span class="block text-2xl font-black text-emerald-300">36</span>
+          <span class="text-xs text-emerald-100 font-medium">Fiches de synthèse</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-emerald-300 transition space-y-4">
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 font-bold text-xs rounded-full">Module 1</span>
+        <h3 class="text-xl font-bold text-slate-900">Structures de Données : Tableaux & Enregistrements</h3>
+        <p class="text-sm text-slate-600">Tableaux à 1 et 2 dimensions, parcours séquentiel, recherche d'un élément, calcul de moyenne et tri simple.</p>
+        <button onclick="openLesson('Module 1 : Structures de Données', 'Un tableau stocke plusieurs éléments de même type dans des cases indicées (de 0 à N-1 ou 1 à N). Les boucles Pour permettent de parcourir et manipuler chaque case.')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs rounded-xl transition">
+          Consulter le cours →
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-emerald-300 transition space-y-4">
+        <span class="px-3 py-1 bg-teal-100 text-teal-700 font-bold text-xs rounded-full">Module 2</span>
+        <h3 class="text-xl font-bold text-slate-900">Développement Web Interactif avec JavaScript</h3>
+        <p class="text-sm text-slate-600">Introduction au DOM, événements utilisateurs (click, hover, submit), alertes interactives et validation de formulaires.</p>
+        <button onclick="openLesson('Module 2 : Programmation JavaScript', 'JavaScript dynamise les pages web en modifiant le contenu HTML et le style CSS en temps réel lors des interactions de l\'utilisateur.')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs rounded-xl transition">
+          Consulter le cours →
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-emerald-300 transition space-y-4">
+        <span class="px-3 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-full">Module 3</span>
+        <h3 class="text-xl font-bold text-slate-900">Modélisation Entité-Association (MCD)</h3>
+        <p class="text-sm text-slate-600">Entités, attributs, identifiants, associations et cardinalités (1:1, 1:N, N:M) pour la conception de systèmes d'information.</p>
+        <button onclick="openLesson('Module 3 : Modèle Entité-Association', 'Le modèle conceptuel de données (MCD) permet de schématiser la structure logique des informations avant leur implémentation en base relationnelle.')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs rounded-xl transition">
+          Consulter le cours →
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-emerald-300 transition space-y-4">
+        <span class="px-3 py-1 bg-purple-100 text-purple-700 font-bold text-xs rounded-full">Module 4</span>
+        <h3 class="text-xl font-bold text-slate-900">Numération Binaire, Hexadécimale & Codage</h3>
+        <p class="text-sm text-slate-600">Conversions entre base 10, base 2 et base 16, codage ASCII et Unicode des caractères, unités de mesure (Ko, Mo, Go, To).</p>
+        <button onclick="openLesson('Module 4 : Systèmes de Numération', 'L\'ordinateur traite exclusivement des signaux binaires (0 et 1). La conversion décimal vers binaire s\'effectue par divisions successives par 2.')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs rounded-xl transition">
+          Consulter le cours →
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-emerald-300 transition space-y-4">
+        <span class="px-3 py-1 bg-amber-100 text-amber-700 font-bold text-xs rounded-full">Module 5</span>
+        <h3 class="text-xl font-bold text-slate-900">Intelligence Artificielle & Nouvelles Technologies</h3>
+        <p class="text-sm text-slate-600">Principes du Machine Learning, modèles de langage, impact sociétal de l'IA et opportunités professionnelles.</p>
+        <button onclick="openLesson('Module 5 : Intelligence Artificielle', 'L\'intelligence artificielle permet à des machines d\'apprendre à partir d\'exemples et de grandes quantités de données sans programmation explicite de toutes les règles.')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs rounded-xl transition">
+          Consulter le cours →
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-emerald-300 transition space-y-4">
+        <span class="px-3 py-1 bg-rose-100 text-rose-700 font-bold text-xs rounded-full">Module 6</span>
+        <h3 class="text-xl font-bold text-slate-900">Sujets Types BEPC & Méthodologie d'Examen</h3>
+        <p class="text-sm text-slate-600">Analyse des questions types, gestion du temps durant l'épreuve, rédaction claire et barème de notation officiel.</p>
+        <button onclick="openLesson('Module 6 : Méthodologie BEPC', 'Lisez attentivement l\'énoncé complet avant de commencer. Justifiez chaque réponse et soignez la présentation pour maximiser les points du correcteur.')" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs rounded-xl transition">
+          Consulter le cours →
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div id="lesson-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 id="modal-title" class="text-xl font-bold text-slate-900"></h3>
+        <button onclick="closeLesson()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold">✕</button>
+      </div>
+      <div class="p-4 bg-emerald-50 rounded-xl text-emerald-900 text-sm leading-relaxed" id="modal-content"></div>
+      <div class="flex justify-end gap-3 pt-2">
+        <button onclick="closeLesson()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm">Fermer</button>
+        <a href="/epreuves.php" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm">Télécharger épreuves BEPC →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-950 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+    <p>&copy; 2026 UPSKILL E-Learning. Tous droits réservés.</p>
+  </footer>
+
+  <script>
+    function openLesson(title, content) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-content').textContent = content;
+      document.getElementById('lesson-modal').classList.remove('hidden');
+    }
+    function closeLesson() {
+      document.getElementById('lesson-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

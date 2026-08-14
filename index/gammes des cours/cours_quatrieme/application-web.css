@@ -1,0 +1,105 @@
+/* Style global */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-course {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 30px;
+    display: inline-block;
+}
+
+.btn-course:hover {
+    background-color: #0056b3;
+}
+header {
+    background-color: #4CAF50;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav ul li a.active {
+    text-decoration: underline;
+}
+
+/* Style du contenu principal */
+main {
+    padding: 20px;
+}
+
+h1 {
+    color: #4CAF50;
+    font-size: 2em;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+#p {
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+ul {
+    margin-left: 20px;
+}
+
+ol {
+    margin-left: 20px;
+}
+
+/* Mise en forme du bouton */
+.btn-next {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px;
+}
+
+.btn-next:hover {
+    background-color: #45a049;
+}
