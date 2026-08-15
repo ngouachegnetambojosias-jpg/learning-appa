@@ -1,11 +1,11 @@
 export const classesData = [
-  { id: '6eme', name: '6ème', cycle: '1er Cycle (Observation)', color: 'blue', desc: 'Fondamentaux de l\'informatique, bureautique, Scratch et base du raisonnement arithmétique/géométrique.' },
-  { id: '5eme', name: '5ème', cycle: '1er Cycle (Orientation)', color: 'indigo', desc: 'Tableurs Excel, réseaux locaux, nombres relatifs, fractions et symétries.' },
-  { id: '4eme', name: '4ème', cycle: '1er Cycle (Consolidation)', color: 'amber', desc: 'Algorithmique, bases de données relationnelles, calcul littéral, théorèmes de Pythagore et Thalès.' },
-  { id: '3eme', name: '3ème (BEPC)', cycle: '1er Cycle (Examen BEPC)', color: 'emerald', desc: 'Préparation intensive au BEPC : algorithmique avancée, JavaScript/Web, trigonométrie, arithmétique et statistiques.' },
-  { id: '2nde', name: 'Seconde (2nde A/C/TI)', cycle: '2nd Cycle (Détermination)', color: 'teal', desc: 'Systèmes numériques, codage binaire, langage Python/C, fonctions numériques et vecteurs.' },
-  { id: '1ere', name: 'Première (1ère A/C/D/TI)', cycle: '2nd Cycle (Probatoire)', color: 'purple', desc: 'Préparation au Probatoire : bases de données SQL, POO, dérivation, études de fonctions et barycentres.' },
-  { id: 'tle', name: 'Terminale (Tle A/C/D/TI)', cycle: '2nd Cycle (Baccalauréat)', color: 'rose', desc: 'Préparation au Baccalauréat : réseaux d\'entreprise, ABR/Graphes, nombres complexes, intégrales et probabilités.' }
+  { id: '6eme', name: '6ème', cycle: '1er Cycle (Observation)', color: 'blue', desc: 'Fondamentaux de l\'informatique et base du raisonnement mathématique.' },
+  { id: '5eme', name: '5ème', cycle: '1er Cycle (Orientation)', color: 'indigo', desc: 'Développement logique, tableurs, réseaux et géométrie plane.' },
+  { id: '4eme', name: '4ème', cycle: '1er Cycle (Consolidation)', color: 'amber', desc: 'Algorithmique, bases de données, calcul littéral et trigonométrie.' },
+  { id: '3eme', name: '3ème (BEPC)', cycle: '1er Cycle (Examen)', color: 'emerald', desc: 'Préparation intensive au BEPC : algorithmes, structures de données, arithmétique et statistiques.' },
+  { id: '2nde', name: 'Seconde (2nde A / C / SES)', cycle: '2nd Cycle (Détermination)', color: 'teal', desc: 'Systèmes numériques, codage de l\'information, fonctions d\'une variable réelle et vecteurs.' },
+  { id: '1ere', name: 'Première (1ère A / C / D / TI)', cycle: '2nd Cycle (Probatoire)', color: 'purple', desc: 'Préparation au Probatoire : bases de données avancées, programmation C/Python, dérivabilité et barycentres.' },
+  { id: 'tle', name: 'Terminale (Tle A / C / D / TI)', cycle: '2nd Cycle (Baccalauréat)', color: 'rose', desc: 'Préparation au Baccalauréat : réseaux et sécurité, POO/SQL, nombres complexes, intégrales, équations différentielles et probabilités.' }
 ];
 
 export const curriculum = {
@@ -13,232 +13,102 @@ export const curriculum = {
     classeTitle: 'Classe de 6ème',
     niveauBadge: 'Niveau 1 - 1er Cycle',
     cycle: 'Cycle d\'Observation',
+    infoColor: 'blue',
+    mathColor: 'sky',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC : Découverte du micro-ordinateur, bureautique, Internet citoyen et initiation aux algorithmes avec Scratch.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Environnement informatique, matériel, production de documents numériques et initiation à l\'algorithmique.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-6-m1',
-              sequence: 'Séquence 1',
-              titre: 'Environnement Matériel & Logiciel du Micro-ordinateur',
-              duree: '8h de cours + 4h TP',
-              objectifs: 'Identifier l\'unité centrale, les périphériques d\'entrée/sortie/stockage, allumer et éteindre un PC selon les normes de sécurité.',
-              coursComplet: `
-### 1. Qu'est-ce qu'un ordinateur ?
-Un micro-ordinateur est une machine électronique programmable conçue pour traiter automatiquement des informations sous différentes formes (textes, images, sons, vidéos).
-
-### 2. Les deux composantes fondamentales
-- **Le Matériel (Hardware) :** Ce sont les composants physiques visibles et palpables.
-  - *L'Unité Centrale :* Le boîtier contenant la carte mère, le microprocesseur (CPU - cerveau de l'ordinateur), la mémoire vive (RAM) et le disque dur.
-  - *Les Périphériques d'entrée :* Permettent d'envoyer des informations à l'ordinateur (Clavier, Souris, Scanner, Microphone, Webcam).
-  - *Les Périphériques de sortie :* Restituent les résultats à l'utilisateur (Écran/Moniteur, Imprimante, Haut-parleurs, Vidéoprojecteur).
-  - *Les Périphériques de stockage :* Conservent les données durablement (Clé USB, Disque Dur externe, Carte mémoire SD).
-- **Le Logiciel (Software) :** Ensemble de programmes et données indiquant à la machine ce qu'elle doit faire.
-  - *Système d'exploitation (OS) :* Windows, Linux, Android, macOS.
-  - *Logiciels d'application :* Word, Paint, Scratch, VLC, Google Chrome.
-
-### 3. Procédure de mise sous tension et d'arrêt sécurisé
-1. Vérifier les branchements et allumer le régulateur de tension (onduleur).
-2. Appuyer sur le bouton Power de l'unité centrale puis sur celui de l'écran.
-3. Pour éteindre : Cliquer sur le menu *Démarrer* > *Arrêter* (Ne jamais débrancher directement la prise secteur pour éviter d'endommager le disque dur).
-              `,
-              tpPratique: {
-                titre: 'TP Pratique 1 : Identification du matériel et arborescence de fichiers',
-                enonce: 'Créer un dossier nommé "INFORMATIQUE_6EME" sur le Bureau, et à l\'intérieur créer deux sous-dossiers "COURS" et "DEVOIRS".',
-                guide: '1. Clic droit sur un espace vide du Bureau -> Nouveau -> Dossier.\n2. Taper le nom en majuscules.\n3. Double-cliquer pour entrer, puis répéter pour les sous-dossiers.'
-              },
-              exercices: [
-                {
-                  question: 'Classer les éléments suivants en Périphérique d\'Entrée, de Sortie ou de Stockage : Clavier, Écran, Clé USB, Souris, Imprimante, Scanner, Carte SD.',
-                  correction: '• Entrée : Clavier, Souris, Scanner.\n• Sortie : Écran, Imprimante.\n• Stockage : Clé USB, Carte SD.'
-                },
-                {
-                  question: 'Expliquer le rôle de la mémoire vive (RAM) par rapport au disque dur.',
-                  correction: 'La mémoire RAM est une mémoire temporaire ultra-rapide qui contient les programmes en cours d\'exécution. Elle s\'efface à l\'extinction. Le disque dur conserve les données de façon permanente.'
-                }
-              ]
-            },
-            {
-              id: 'info-6-m2',
-              sequence: 'Séquence 2',
-              titre: 'Production de Documents Textes avec Microsoft Word / Writer',
-              duree: '10h de cours + 6h TP',
-              objectifs: 'Maîtriser la saisie au clavier, la mise en forme du texte (police, gras, couleur), l\'insertion d\'images et l\'enregistrement au format PDF/DOCX.',
-              coursComplet: `
-### 1. Interface d'un Traitement de Texte
-Un logiciel de traitement de texte (comme Word ou LibreOffice Writer) est composé de :
-- La barre de titre et le ruban avec les onglets (Accueil, Insertion, Mise en page).
-- La zone de travail (feuille blanche virtuelle).
-- La barre d'état (affiche le nombre de mots et la langue du dictionnaire).
-
-### 2. Les Règles Fondamentales de Typographie
-- Mettre une majuscule en début de phrase et après chaque point.
-- Ponctuation simple (, .) : Pas d'espace avant, un espace après.
-- Ponctuation double (: ; ? !) : Un espace insécable avant, un espace après.
-- Pour changer de paragraphe, appuyer sur la touche **Entrée**. Pour aller à la ligne sans changer de paragraphe : **Maj + Entrée**.
-
-### 3. Les Outils de Mise en Forme
-- Police (Arial, Times New Roman), Taille (12pt pour le texte courant, 16pt pour les titres).
-- Attributs : **Gras** (Ctrl+G), *Italique* (Ctrl+I), <u>Souligné</u> (Ctrl+U).
-- Alignements : Aligné à gauche, Centré (pour les titres), Justifié (pour un document soigné).
-              `,
-              tpPratique: {
-                titre: 'TP Pratique 2 : Rédaction d\'une lettre administrative et d\'un poème',
-                enonce: 'Rédiger une demande d\'inscription adressée au Chef d\'Établissement avec titre centré en gras et corps de texte justifié.',
-                guide: 'Utiliser la police Times New Roman taille 14, interligne 1.15, et exporter le résultat final en format PDF.'
-              },
-              exercices: [
-                {
-                  question: 'Citer les raccourcis clavier sous Windows pour : Enregistrer, Copier, Coller et Annuler.',
-                  correction: '• Enregistrer : Ctrl + S\n• Copier : Ctrl + C\n• Coller : Ctrl + V\n• Annuler : Ctrl + Z'
-                }
-              ]
-            }
+          id: 'info-6-m1',
+          titre: 'Environnement Matériel & Logiciel du Micro-ordinateur',
+          duree: '8h',
+          objectifs: 'Identifier l\'unité centrale, périphériques d\'entrée/sortie/stockage, allumer et éteindre correctement un PC.',
+          resume: 'L\'ordinateur est un système de traitement automatique de l\'information. Il est constitué de la partie matérielle (Hardware : processeur, mémoire vive RAM, disque dur, clavier, souris, écran) et de la partie logicielle (Software : système d\'exploitation Windows/Linux et logiciels d\'application).',
+          exercices: [
+            'Distinguer un périphérique d\'entrée (clavier, scanner) d\'un périphérique de sortie (écran, imprimante).',
+            'Citer les rôles de la carte mère, du processeur (CPU) et de la mémoire RAM.'
           ]
         },
         {
-          nom: 'Trimestre 2 (Séquences 3 & 4)',
-          modules: [
-            {
-              id: 'info-6-m3',
-              sequence: 'Séquence 3',
-              titre: 'Navigation Web, Moteurs de Recherche & Éthique Numérique',
-              duree: '8h de cours + 4h TP',
-              objectifs: 'Naviguer efficacement sur Internet, formuler des requêtes pertinentes sur Google et adopter un comportement citoyen sécurisé.',
-              coursComplet: `
-### 1. Définitions Clés
-- **Internet :** Réseau informatique mondial reliant des millions d'ordinateurs via le protocole TCP/IP.
-- **Le Web (World Wide Web) :** Service d'Internet permettant de consulter des pages reliées entre elles par des hyperliens (URL).
-- **Navigateur Web :** Logiciel client qui interprète le langage HTML (Chrome, Mozilla Firefox, Microsoft Edge, Safari).
-- **Moteur de recherche :** Outil en ligne indexant les pages du web (Google, Bing, Qwant Junior).
-
-### 2. Les Règles d'or de la Cybersécurité pour Jeunes
-1. Ne jamais communiquer ses mots de passe, son adresse ou son numéro de téléphone en ligne.
-2. Vérifier la présence du cadenas de sécurité (**HTTPS**) sur les sites consultés.
-3. Toujours citer la source d'un texte ou d'une image pour respecter les droits d'auteur.
-              `,
-              tpPratique: {
-                titre: 'TP Pratique 3 : Recherche documentaire sur les parcs nationaux du Cameroun',
-                enonce: 'Effectuer une recherche sur le Parc National de Waza et enregistrer 2 photos légendées dans un document Word.',
-                guide: 'Utiliser des mots-clés précis : "Parc National de Waza faune flore Cameroun officiel".'
-              },
-              exercices: [
-                {
-                  question: 'Quelle est la différence fondamentale entre un navigateur web et un moteur de recherche ?',
-                  correction: 'Le navigateur est un logiciel installé sur l\'ordinateur qui sert à afficher les pages web (ex: Firefox), alors que le moteur de recherche est un site web spécialisé qui aide à trouver des informations (ex: Google).'
-                }
-              ]
-            },
-            {
-              id: 'info-6-m4',
-              sequence: 'Séquence 4',
-              titre: 'Initiation à l\'Algorithmique & Programmation Visuelle avec Scratch',
-              duree: '10h de cours + 8h TP',
-              objectifs: 'Comprendre la notion d\'algorithme, de séquence ordonnée d\'instructions et animer des lutins avec Scratch.',
-              coursComplet: `
-### 1. Qu'est-ce qu'un algorithme ?
-Un algorithme est une suite ordonnée, précise et non ambiguë d'instructions permettant de résoudre un problème donné ou d'accomplir une tâche.
-
-### 2. Découverte de l'environnement Scratch
-- **La Scène (Stage) :** Zone où s'affichent et évoluent les lutins (Sprites) sur un repère orthogonal (X de -240 à +240, Y de -180 à +180).
-- **La Palette de Blocs :**
-  - *Mouvement (bleu) :* avancer de 10 pas, tourner à droite de 90 degrés.
-  - *Apparence (violet) :* dire « Bonjour ! » pendant 2 secondes, changer de costume.
-  - *Événements (jaune) :* quand le drapeau vert est cliqué, quand la touche espace est pressée.
-  - *Contrôle (orange) :* répéter 10 fois, attendre 1 seconde, si... alors.
-              `,
-              tpPratique: {
-                titre: 'TP Pratique 4 : Tracé d\'un carré géométrique avec Scratch',
-                enonce: 'Écrire un programme Scratch avec le bloc Stylo pour que le lutin dessine un carré de 100 pas de côté.',
-                codeDemo: `// Algorithme Scratch équivalent
-Quand drapeau vert cliqué :
-  Effacer tout
-  Stylo en position d'écriture
-  Répéter 4 fois :
-    Avancer de 100 pas
-    Tourner à droite de 90 degrés`,
-                guide: 'Ne pas oublier de relever le stylo à la fin du tracé.'
-              },
-              exercices: [
-                {
-                  question: 'Pourquoi utilise-t-on un angle de 90° pour faire tourner le lutin lors du tracé d\'un carré ?',
-                  correction: 'Car la somme des angles d\'un polygone régulier est de 360°, et pour un carré à 4 côtés égaux : 360° / 4 = 90°.'
-                }
-              ]
-            }
+          id: 'info-6-m2',
+          titre: 'Production de Documents Textes (Traitement de Texte)',
+          duree: '10h',
+          objectifs: 'Saisir, mettre en forme, corriger et enregistrer un document texte simple (Microsoft Word / LibreOffice Writer).',
+          resume: 'Un logiciel de traitement de texte permet la rédaction de lettres, devoirs et exposés. Notions fondamentales : police de caractères, taille, alignement (gauche, centré, justifié), insertion d\'images et enregistrement dans un dossier structuré.',
+          exercices: [
+            'Mettre en gras et souligner les titres d\'un paragraphe.',
+            'Enregistrer un document au format standard .docx ou .pdf.'
+          ]
+        },
+        {
+          id: 'info-6-m3',
+          titre: 'Découverte des Réseaux & d\'Internet Responsable',
+          duree: '6h',
+          objectifs: 'Comprendre Internet, utiliser un navigateur web, un moteur de recherche et respecter la sécurité des données.',
+          resume: 'Internet est le réseau mondial interconnectant des millions d\'ordinateurs. Le Web permet de consulter des pages web grâce à des adresses URL. Règle d\'or : ne jamais divulguer de mot de passe ni de données personnelles en ligne.',
+          exercices: [
+            'Identifier les navigateurs courants (Chrome, Firefox, Edge) et les moteurs de recherche (Google, Qwant).',
+            'Formuler une requête de recherche efficace pour un exposé scolaire.'
+          ]
+        },
+        {
+          id: 'info-6-m4',
+          titre: 'Initiation à l\'Algorithmique Visuelle (Scratch)',
+          duree: '8h',
+          objectifs: 'Notion d\'instructions pas à pas, séquences ordonnées et prise en main de l\'environnement Scratch.',
+          resume: 'Un algorithme est une suite ordonnée d\'instructions permettant de parvenir à un résultat précis. Avec le logiciel Scratch, nous assemblons des blocs d\'instructions pour déplacer des personnages (lutins) et créer des animations interactives.',
+          exercices: [
+            'Créer un script qui fait avancer le lutin de 50 pas et lui fait dire « Bonjour le Cameroun ! ».',
+            'Utiliser la boucle "Répéter 4 fois" pour tracer un carré.'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC : Arithmétique des entiers et décimaux, fractions, géométrie plane (droites remarquables, angles, cercles) et proportionnalité.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Arithmétique des entiers et décimaux, fractions simples, géométrie de base (droites, segments, angles, cercles) et mesures.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-6-m1',
-              sequence: 'Séquence 1',
-              titre: 'Arithmétique des Nombres Entiers et Décimaux',
-              duree: '12h de cours + 6h Exercices',
-              objectifs: 'Maîtriser la numération décimale de position, les opérations fondamentales (+, -, ×, ÷) et les règles de priorité opératoire.',
-              coursComplet: `
-### 1. Numération Décimale de Position
-Un nombre décimal possède une partie entière et une partie décimale séparées par une virgule.
-- Dans le nombre **4 582,376** :
-  - 4 est le chiffre des milliers, 5 des centaines, 8 des dizaines, 2 des unités.
-  - 3 est le chiffre des dixièmes (1/10), 7 des centièmes (1/100), 6 des millièmes (1/1000).
-
-### 2. Priorités Opératoires
-Dans une suite d'opérations sans parenthèses :
-1. On effectue en priorité les **multiplications et divisions**.
-2. Puis on effectue les **additions et soustractions** de gauche à droite.
-3. En présence de parenthèses, on calcule **d'abord ce qui est à l'intérieur des parenthèses**.
-
-*Exemple :*
-A = 15 + 4 × 3 = 15 + 12 = **27** (et non (15+4)×3=57).
-B = (15 + 4) × 3 = 19 × 3 = **57**.
-              `,
-              calculateur: {
-                type: 'priorite',
-                titre: 'Calculateur interactif d\'arithmétique'
-              },
-              exercices: [
-                {
-                  question: 'Calculer l\'expression suivante en détaillant les étapes : C = 50 - 5 × (6 + 2).',
-                  correction: 'Étape 1 (parenthèses) : 6 + 2 = 8.\nÉtape 2 (multiplication) : 5 × 8 = 40.\nÉtape 3 (soustraction) : 50 - 40 = 10.\nConclusion : C = 10.'
-                },
-                {
-                  question: 'Poser la division euclidienne de 785 par 12. Donner le quotient entier et le reste.',
-                  correction: '785 = (12 × 65) + 5 avec reste 5 < 12.\nQuotient = 65, Reste = 5.'
-                }
-              ]
-            },
-            {
-              id: 'math-6-m2',
-              sequence: 'Séquence 2',
-              titre: 'Géométrie de Base : Droites Parallèles & Perpendiculaires',
-              duree: '10h de cours + 6h TD',
-              objectifs: 'Tracer et reconnaître des droites sécantes, perpendiculaires et parallèles à la règle et à l\'équerre. Utiliser les propriétés de déduction.',
-              coursComplet: `
-### 1. Définitions Fondamentales
-- Deux droites sont **sécantes** si elles ont un unique point commun.
-- Deux droites sont **perpendiculaires** si elles se coupent en formant un angle droit (90°). On note : $(D_1) \perp (D_2)$.
-- Deux droites sont **parallèles** si elles ne se coupent jamais ou si elles sont confondues. On note : $(D_1) \parallel (D_2)$.
-
-### 2. Propriétés Fondamentales de Déduction (À retenir par cœur)
-- **Propriété 1 :** Si deux droites sont perpendiculaires à une même troisième droite, alors elles sont **parallèles entre elles**.
-- **Propriété 2 :** Si deux droites sont parallèles, toute droite perpendiculaire à l'une est **perpendiculaire à l'autre**.
-              `,
-              exercices: [
-                {
-                  question: 'Soient trois droites (D1), (D2) et (D3) telles que (D1) ⊥ (D3) et (D2) ⊥ (D3). Que peut-on affirmer sur (D1) et (D2) ? Justifier avec une propriété du cours.',
-                  correction: 'Puisque (D1) et (D2) sont toutes deux perpendiculaires à la même droite (D3), alors d\'après la Propriété 1 du cours, (D1) et (D2) sont parallèles entre elles : (D1) // (D2).'
-                }
-              ]
-            }
+          id: 'math-6-m1',
+          titre: 'Nombres Entiers Naturels & Nombres Décimaux',
+          duree: '12h',
+          objectifs: 'Écriture, comparaison, encadrement et 4 opérations fondamentales sur les entiers et décimaux.',
+          resume: 'Système décimal de numération de position : rang des unités, dizaines, centaines, dixièmes, centièmes. Techniques opératoires de l\'addition, soustraction, multiplication et division euclidienne (dividende = diviseur × quotient + reste avec reste < diviseur).',
+          exercices: [
+            'Poser et effectuer : 458,75 + 89,4 et 125,4 × 3,5.',
+            'Effectuer la division euclidienne de 425 par 13 et donner le quotient et le reste.'
+          ]
+        },
+        {
+          id: 'math-6-m2',
+          titre: 'Fractions & Notions de Partage',
+          duree: '10h',
+          objectifs: 'Représenter une fraction, simplifier des fractions simples et calculer la fraction d\'une quantité.',
+          resume: 'Une fraction a/b (avec b ≠ 0) représente le quotient exact de a par b. Écritures fractionnaires égales en multipliant ou divisant le numérateur et le dénominateur par un même nombre non nul. Prendre les 3/4 de 200 FCFA = (200 × 3) / 4 = 150 FCFA.',
+          exercices: [
+            'Simplifier la fraction 24/36.',
+            'Un élève a 12 000 FCFA. Il dépense les 2/3 pour ses fournitures. Combien lui reste-t-il ?'
+          ]
+        },
+        {
+          id: 'math-6-m3',
+          titre: 'Droites, Segments, Demi-droites & Positions Relatives',
+          duree: '10h',
+          objectifs: 'Utiliser la règle et l\'équerre pour tracer des droites parallèles et perpendiculaires.',
+          resume: 'Droites sécantes, parallèles (qui ne se coupent jamais) et perpendiculaires (qui forment un angle droit de 90°). Propriété fondamentale : Si deux droites sont perpendiculaires à une même troisième, alors elles sont parallèles entre elles.',
+          exercices: [
+            'Tracer une droite (D) et un point A n\'appartenant pas à (D). Construire la perpendiculaire et la parallèle à (D) passant par A.',
+            'Démontrer que deux droites tracées sont parallèles en citant la propriété du cours.'
+          ]
+        },
+        {
+          id: 'math-6-m4',
+          titre: 'Angles, Triangles & Figures Usuelles (Rectangle, Carré)',
+          duree: '10h',
+          objectifs: 'Mesurer et tracer des angles au rapporteur ; calculer périmètres et aires usuelles.',
+          resume: 'Classification des angles : aigu (< 90°), droit (= 90°), obtus (> 90°), plat (= 180°). Périmètre du rectangle P = 2 × (L + l), aire A = L × l. Aire du triangle A = (Base × Hauteur) / 2.',
+          exercices: [
+            'Construire un angle de 65° avec le rapporteur.',
+            'Calculer l\'aire et le périmètre d\'un terrain rectangulaire de longueur 25 m et largeur 14 m.'
           ]
         }
       ]
@@ -249,109 +119,102 @@ B = (15 + 4) × 3 = 19 × 3 = **57**.
     classeTitle: 'Classe de 5ème',
     niveauBadge: 'Niveau 2 - 1er Cycle',
     cycle: 'Cycle d\'Orientation',
+    infoColor: 'indigo',
+    mathColor: 'blue',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC : Tableur Microsoft Excel, réseaux locaux (LAN), sécurité et structures algorithmiques de base.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Systèmes d\'exploitation avancés, feuilles de calcul (tableur), réseaux locaux et logique des variables.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-5-m1',
-              sequence: 'Séquence 1',
-              titre: 'Gestion & Analyse de Données avec un Tableur (Excel / Calc)',
-              duree: '12h de cours + 8h TP',
-              objectifs: 'Maîtriser les cellules, lignes, colonnes, saisir des formules (=SOMME, =MOYENNE, =MIN, =MAX) et générer des graphiques statistiques.',
-              coursComplet: `
-### 1. Structure d'un Tableur
-Un tableur est un logiciel conçu pour manipuler automatiquement des données numériques organisées sous forme de tableau (classeur composé de feuilles de calcul).
-- **Cellule :** Intersection d'une colonne (lettres A, B, C...) et d'une ligne (chiffres 1, 2, 3...). Exemple : **B4**.
-- **Plage de cellules :** Ensemble continu de cellules noté avec deux-points. Exemple : **A1:A10**.
-
-### 2. Les Formules & Fonctions Essentielles
-Toute formule commence obligatoirement par le signe **égal (=)**.
-- Somme automatique : \`=SOMME(C2:C15)\`
-- Moyenne des notes : \`=MOYENNE(D2:D20)\`
-- Valeur maximale : \`=MAX(B2:B30)\`
-- Valeur minimale : \`=MIN(B2:B30)\`
-- Condition logique : \`=SI(E2>=10; "Admis"; "Ajourné")\`
-              `,
-              tpPratique: {
-                titre: 'TP Pratique 1 : Bulletin de notes automatisé d\'une classe',
-                enonce: 'Créer un tableau avec 5 élèves et 4 matières. Calculer la moyenne pondérée de chaque élève et tracer un histogramme comparatif.',
-                guide: 'Appliquer des coefficients différents pour les Mathématiques (coef 4) et l\'Informatique (coef 2).'
-              },
-              exercices: [
-                {
-                  question: 'Quelle formule permet de calculer la moyenne des cellules B2, B3, B4 et B5 ?',
-                  correction: 'La formule est : =MOYENNE(B2:B5) ou =(B2+B3+B4+B5)/4.'
-                }
-              ]
-            },
-            {
-              id: 'info-5-m2',
-              sequence: 'Séquence 2',
-              titre: 'Architecture & Topologies des Réseaux Informatiques',
-              duree: '8h de cours + 4h TP',
-              objectifs: 'Distinguer les types de réseaux (LAN, MAN, WAN), identifier les équipements (Switch, Routeur, Câble RJ45) et comprendre les topologies physique et logique.',
-              coursComplet: `
-### 1. Classification Géographique des Réseaux
-- **PAN (Personal Area Network) :** Réseau personnel (Bluetooth, portée < 10m).
-- **LAN (Local Area Network) :** Réseau local au sein d'une salle informatique ou d'un lycée (portée < 1km).
-- **MAN (Metropolitan Area Network) :** Réseau à l'échelle d'une ville (ex: campus universitaire à Yaoundé).
-- **WAN (Wide Area Network) :** Réseau étendu mondial (ex: Internet).
-
-### 2. Équipements d'Interconnexion
-- **Switch (Commutateur) :** Relie plusieurs ordinateurs au sein d'un même réseau local et distribue les paquets aux seuls destinataires.
-- **Routeur :** Relie deux réseaux différents entre eux (ex: le réseau du lycée et le réseau Internet).
-- **Câble à paires torsadées (RJ45) / Fibre optique :** Médias de transmission filaires.
-              `,
-              exercices: [
-                {
-                  question: 'Quel équipement réseau est indispensable pour connecter le réseau local de votre établissement scolaire à Internet ?',
-                  correction: 'C\'est le Routeur (Router / Modem-Routeur).'
-                }
-              ]
-            }
+          id: 'info-5-m1',
+          titre: 'Systèmes d\'Exploitation & Gestion des Fichiers',
+          duree: '8h',
+          objectifs: 'Organiser l\'arborescence de dossiers, comprendre les extensions (.pdf, .docx, .xlsx, .mp4) et les droits d\'accès.',
+          resume: 'Le système d\'exploitation (Windows, Linux Ubuntu, macOS) gère le matériel, les processus et l\'arborescence de stockage hiérarchique. Gestion du chemin absolu et relatif des fichiers, compression zip et règles de sauvegarde (règle 3-2-1).',
+          exercices: [
+            'Identifier le type de fichier d\'après son extension (.jpg, .py, .html, .xlsx).',
+            'Créer une arborescence de dossiers pour classer les cours par trimestre et par matière.'
+          ]
+        },
+        {
+          id: 'info-5-m2',
+          titre: 'Tableur & Calculs Automatisés (Excel / Calc)',
+          duree: '10h',
+          objectifs: 'Créer un tableau de données, saisir des formules (=SOMME, =MOYENNE, =MAX, =MIN) et formater les cellules.',
+          resume: 'Une feuille de calcul est composée de lignes (numéros) et de colonnes (lettres) formant des cellules (ex: B4). Les formules commencent toujours par le signe "=" et permettent le calcul dynamique des moyennes scolaires, bilans et budgets.',
+          exercices: [
+            'Écrire la formule de la moyenne trimestrielle pondérée sur Excel.',
+            'Utiliser la fonction SOMME pour calculer le total des dépenses mensuelles.'
+          ]
+        },
+        {
+          id: 'info-5-m3',
+          titre: 'Réseaux Informatiques Locaux (LAN) & Partage',
+          duree: '8h',
+          objectifs: 'Topologies réseau (étoile, bus, anneau), composants réseau (switch, routeur, câble RJ45, Wi-Fi).',
+          resume: 'Un réseau informatique permet à plusieurs ordinateurs de communiquer et de partager des ressources (imprimantes, fichiers, connexion internet). La topologie en étoile reliée à un commutateur (Switch) est la plus répandue.',
+          exercices: [
+            'Schématiser un réseau local en étoile avec 4 PC reliés à un Switch et une imprimante réseau.',
+            'Expliquer le rôle d\'une adresse IP dans l\'identification d\'une machine.'
+          ]
+        },
+        {
+          id: 'info-5-m4',
+          titre: 'Algorithmes & Notion de Variables',
+          duree: '8h',
+          objectifs: 'Définir une variable (nom, type, valeur), affectation et instruction conditionnelle simple Si...Alors.',
+          resume: 'Une variable est un emplacement mémoire nommé permettant de stocker une valeur modifiable. Les types usuels sont : Entier, Réel, Chaîne de caractères, Booléen. L\'instruction conditionnelle permet d\'exécuter des actions selon qu\'une condition est vraie ou fausse.',
+          exercices: [
+            'Écrire un algorithme qui demande l\'âge de l\'utilisateur et affiche "Majeur" si âge >= 21 ans (ou 18 ans) et "Mineur" sinon.',
+            'Tracer l\'état des variables lors de l\'échange des valeurs de deux variables A et B avec une variable temporaire.'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC : Nombres relatifs, opérations sur les fractions, symétrie centrale, angles et parallélogrammes.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Nombres relatifs, nombres rationnels, proportionnalité, statistiques élémentaires, symétrie centrale, triangles et parallélogrammes.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-5-m1',
-              sequence: 'Séquence 1',
-              titre: 'Nombres Relatifs : Comparaison, Addition & Soustraction',
-              duree: '12h de cours + 6h Exercices',
-              objectifs: 'Repérer un point sur une droite graduée, additionner et soustraire deux nombres relatifs de même signe ou de signes contraires.',
-              coursComplet: `
-### 1. Qu'est-ce qu'un Nombre Relatif ?
-Un nombre relatif est constitué d'un signe (+ ou -) et d'une distance à zéro (valeur absolue).
-- Nombres positifs : +5, +12,4 (supérieurs à 0).
-- Nombres négatifs : -3, -8,5 (inférieurs à 0).
-
-### 2. Règle des Signes pour l'Addition
-- **Deux nombres de même signe :** On garde le signe commun et on additionne leurs distances à zéro.
-  *(+3) + (+5) = +8* | *(-4) + (-6) = -10*
-- **Deux nombres de signes contraires :** On prend le signe de celui qui a la plus grande distance à zéro et on fait la différence des distances.
-  *(+8) + (-3) = +5* | *(-9) + (+4) = -5*
-
-### 3. Soustraction de Deux Relatifs
-*Règle d'or :* Soustraire un nombre relatif revient à **ajouter son opposé** : $a - b = a + (-b)$.
-- *(+5) - (+8) = (+5) + (-8) = -3*
-- *(-7) - (-10) = (-7) + (+10) = +3*
-              `,
-              exercices: [
-                {
-                  question: 'Calculer : A = (-15) + (+23) et B = (-8) - (-14).',
-                  correction: 'A = +8\nB = (-8) + (+14) = +6.'
-                }
-              ]
-            }
+          id: 'math-5-m1',
+          titre: 'Nombres Relatifs (Positifs et Négatifs)',
+          duree: '12h',
+          objectifs: 'Repérer sur une droite graduée, comparer et additionner/soustraire des nombres relatifs.',
+          resume: 'L\'ensemble des entiers relatifs regroupe les nombres positifs (+5) et négatifs (-8). Règle d\'addition : deux nombres de même signe gardent leur signe commun et on additionne leurs distances à zéro ; de signes contraires, on prend le signe de celui qui a la plus grande distance à zéro.',
+          exercices: [
+            'Calculer : (+7) + (-12) ; (-9) - (-15) ; (-4) + (-8).',
+            'Placer sur un axe gradué les points A(-3,5), B(+2) et C(-1).'
+          ]
+        },
+        {
+          id: 'math-5-m2',
+          titre: 'Calcul Fractionnaire & Proportionnalité',
+          duree: '12h',
+          objectifs: 'Additionner, soustraire, multiplier des fractions et calculer des pourcentages.',
+          resume: 'Pour additionner deux fractions, on les réduit au même dénominateur : a/b + c/b = (a+c)/b. Pour multiplier : (a/b) × (c/d) = (a×c)/(b×d). Tableau de proportionnalité, coefficient de proportionnalité et règle du produit en croix.',
+          exercices: [
+            'Calculer : 3/4 + 5/6 et simplifier le résultat.',
+            'Dans une classe de 40 élèves, 65% sont des filles. Calculer le nombre de filles et de garçons.'
+          ]
+        },
+        {
+          id: 'math-5-m3',
+          titre: 'Symétrie Centrale & Parallélogrammes',
+          duree: '10h',
+          objectifs: 'Construire le symétrique d\'un point/figure par rapport à un point O ; propriétés du parallélogramme.',
+          resume: 'La symétrie centrale est un demi-tour (180°) autour d\'un point centre O. Elle conserve les longueurs, les angles, le parallélisme et les aires. Un parallélogramme est un quadrilatère dont les diagonales se coupent en leur milieu.',
+          exercices: [
+            'Construire le symétrique d\'un triangle ABC par rapport à un point O extérieur.',
+            'Démontrer qu\'un quadrilatère dont les côtés opposés sont parallèles deux à deux est un parallélogramme.'
+          ]
+        },
+        {
+          id: 'math-5-m4',
+          titre: 'Triangles : Somme des Angles & Inégalité Triangulaire',
+          duree: '10h',
+          objectifs: 'Appliquer la propriété : la somme des angles d\'un triangle vaut 180° ; hauteurs et médiatrices.',
+          resume: 'Dans tout triangle ABC, on a : Â + B̂ + Ĉ = 180°. Dans un triangle rectangle, les deux angles aigus sont complémentaires (leur somme vaut 90°). Dans un triangle équilatéral, chaque angle mesure 60°.',
+          exercices: [
+            'Dans un triangle ABC rectangle en A avec B̂ = 38°, calculer la mesure de Ĉ.',
+            'Peut-on construire un triangle de côtés 4 cm, 7 cm et 12 cm ? Justifier par l\'inégalité triangulaire.'
           ]
         }
       ]
@@ -362,96 +225,102 @@ Un nombre relatif est constitué d'un signe (+ ou -) et d'une distance à zéro 
     classeTitle: 'Classe de 4ème',
     niveauBadge: 'Niveau 3 - 1er Cycle',
     cycle: 'Cycle de Consolidation',
+    infoColor: 'amber',
+    mathColor: 'orange',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC : Algorithmique structurée, variables, structures conditionnelles et itératives, bases de données et SQL.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Conception de bases de données relationnelles (SGBD), pages web HTML/CSS, algorithmique avec structures itératives et maintenance.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-4-m1',
-              sequence: 'Séquence 1',
-              titre: 'Algorithmique : Variables, Types, Affectation & Entrées/Sorties',
-              duree: '12h de cours + 6h TD',
-              objectifs: 'Déclarer des variables (Entier, Réel, Chaîne, Booléen), utiliser les instructions LIRE et ECRIRE, et structurer un algorithme.',
-              coursComplet: `
-### 1. Structure Générale d'un Algorithme
-\`\`\`text
-Algorithme Nom_De_L_Algorithme
-Variables
-   identificateur : Type;
-Constantes
-   PI = 3.14;
-Début
-   // Corps de l'algorithme
-   Ecrire("Message à afficher");
-   Lire(variable);
-   variable <- valeur; // Affectation
-Fin
-\`\`\`
-
-### 2. Les Types de Données Standards
-- **Entier :** Nombres entiers sans virgule (ex: -5, 0, 42).
-- **Reel :** Nombres à virgule (ex: 3.14, -0.75).
-- **Chaine :** Texte entre guillemets (ex: "Bonjour Yaoundé").
-- **Booleen :** VRAI ou FAUX.
-              `,
-              tpPratique: {
-                titre: 'TP Pratique : Algorithme de calcul du périmètre et de l\'aire d\'un rectangle',
-                enonce: 'Écrire l\'algorithme demandant la longueur et la largeur à l\'utilisateur, puis affichant le périmètre et l\'aire.',
-                codeDemo: `Algorithme Rectangle_Calculs
-Variables
-   L, l, P, A : Reel;
-Début
-   Ecrire("Entrez la longueur : ");
-   Lire(L);
-   Ecrire("Entrez la largeur : ");
-   Lire(l);
-   P <- 2 * (L + l);
-   A <- L * l;
-   Ecrire("Le périmètre est : ", P);
-   Ecrire("L'aire est : ", A);
-Fin`
-              },
-              exercices: [
-                {
-                  question: 'Soit l\'instruction : x <- 10; y <- 20; x <- y; y <- x; Quelles sont les valeurs finales de x et y ?',
-                  correction: 'x vaut 20 et y vaut 20. Pour échanger les variables sans écraser la valeur, il faut obligatoirement une variable temporaire : temp <- x; x <- y; y <- temp.'
-                }
-              ]
-            }
+          id: 'info-4-m1',
+          titre: 'Bases de Données Relationnelles & SGBD',
+          duree: '10h',
+          objectifs: 'Définir table, enregistrement, champ, clé primaire et rédiger des requêtes SQL basiques.',
+          resume: 'Un SGBD (Système de Gestion de Base de Données comme MySQL, Access) permet de stocker des informations de manière structurée sans redondance. La clé primaire identifie de façon unique chaque ligne (ex: matricule élève). Requêtes : SELECT, INSERT, UPDATE, DELETE.',
+          exercices: [
+            'Créer une table ELEVE(Matricule, Nom, DateNaissance, Classe).',
+            'Écrire la requête SQL pour afficher tous les élèves de la classe de 4ème.'
+          ]
+        },
+        {
+          id: 'info-4-m2',
+          titre: 'Création de Pages Web avec HTML & CSS',
+          duree: '10h',
+          objectifs: 'Structurer un document HTML5 (balises head, body, h1..h6, p, a, img, table) et le styliser avec CSS.',
+          resume: 'HTML (HyperText Markup Language) définit la structure et le contenu d\'une page web, tandis que CSS (Cascading Style Sheets) gère la présentation visuelle (couleurs, polices, marges, disposition).',
+          exercices: [
+            'Rédiger le code HTML d\'une page contenant un titre principal, un paragraphe, une liste à puces et une image.',
+            'Appliquer une règle CSS pour mettre le fond de page en gris clair et les titres en bleu foncé.'
+          ]
+        },
+        {
+          id: 'info-4-m3',
+          titre: 'Algorithmique : Structures Répétitives (Boucles)',
+          duree: '10h',
+          objectifs: 'Maîtriser les boucles Pour (itérations définies) et TantQue (condition d\'arrêt).',
+          resume: 'Une boucle permet de répéter un bloc d\'instructions un certain nombre de fois sans réécrire le code. La boucle "Pour i allant de 1 à N" est utilisée quand le nombre d\'itérations est connu à l\'avance ; la boucle "TantQue" dépend d\'une condition logique.',
+          exercices: [
+            'Écrire un algorithme qui calcule la factorielle d\'un nombre entier N (N! = 1 × 2 × ... × N).',
+            'Écrire un algorithme demandant un mot de passe à l\'utilisateur tant que celui-ci est incorrect.'
+          ]
+        },
+        {
+          id: 'info-4-m4',
+          titre: 'Maintenance Matérielle & Sécurité du Système',
+          duree: '6h',
+          objectifs: 'Diagnostic des pannes courantes, virus informatiques, antivirus et nettoyage système.',
+          resume: 'La maintenance préventive (dépoussiérage, défragmentation, mises à jour) prolonge la durée de vie des équipements. Les logiciels malveillants (virus, chevaux de Troie, ransomwares) nécessitent l\'installation d\'un antivirus actif et le scan régulier des clés USB.',
+          exercices: [
+            'Citer trois bonnes pratiques pour protéger un poste informatique contre les infections virales.',
+            'Que faire lorsqu\'un ordinateur refuse de s\'allumer ou émet des bips sonores au démarrage ?'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC : Théorème de Pythagore, théorème de Thalès, calcul littéral et équations du premier degré.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Nombres rationnels et puissances, calcul littéral et équations du 1er degré, théorème de Pythagore, cosinus d\'un angle aigu et statistiques.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-4-m1',
-              sequence: 'Séquence 1',
-              titre: 'Le Théorème de Pythagore & sa Réciproque',
-              duree: '12h de cours + 8h TD',
-              objectifs: 'Calculer la longueur de l\'hypoténuse ou d\'un côté de l\'angle droit dans un triangle rectangle. Démontrer qu\'un triangle est rectangle avec la réciproque.',
-              coursComplet: `
-### 1. Énoncé du Théorème Direct de Pythagore
-Dans un triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.
-Si le triangle $ABC$ est rectangle en $A$, alors :
-$$BC^2 = AB^2 + AC^2$$
-
-### 2. Réciproque du Théorème de Pythagore
-Si dans un triangle $ABC$, le plus grand côté vérifie $BC^2 = AB^2 + AC^2$, alors le triangle $ABC$ est **rectangle en A**.
-              `,
-              exercices: [
-                {
-                  question: 'Soit un triangle ABC rectangle en A tel que AB = 6 cm et AC = 8 cm. Calculer la longueur de l\'hypoténuse BC.',
-                  correction: 'D\'après le théorème de Pythagore :\nBC² = AB² + AC² = 6² + 8² = 36 + 64 = 100.\nBC = √100 = 10 cm.'
-                }
-              ]
-            }
+          id: 'math-4-m1',
+          titre: 'Puissances de 10 & Calcul avec Nombres Rationnels',
+          duree: '12h',
+          objectifs: 'Calculer avec les puissances d\'exposant entier relatif, notation scientifique et 4 opérations sur les rationnels.',
+          resume: 'Propriétés des puissances : a^m × a^n = a^(m+n) ; (a^m)^n = a^(m×n) ; a^m / a^n = a^(m-n). L\'écriture scientifique d\'un nombre est de la forme a × 10^p avec 1 ≤ |a| < 10 et p un entier relatif.',
+          exercices: [
+            'Écrire en notation scientifique la distance Terre-Soleil : 149 600 000 km.',
+            'Calculer et simplifier : A = (2/3 - 1/4) ÷ (5/6 + 1/2).'
+          ]
+        },
+        {
+          id: 'math-4-m2',
+          titre: 'Calcul Littéral, Développement & Équations du 1er Degré',
+          duree: '12h',
+          objectifs: 'Développer avec la distributivité, factoriser par un facteur commun et résoudre des équations de la forme ax + b = c.',
+          resume: 'Distributivité simple : k(a + b) = ka + kb ; double distributivité : (a + b)(c + d) = ac + ad + bc + bd. Résolution d\'une équation : regrouper les termes en x d\'un côté et les nombres constants de l\'autre.',
+          exercices: [
+            'Développer et réduire : E = (3x - 2)(2x + 5) - (4x - 1).',
+            'Résoudre l\'équation : 5x - 7 = 2x + 11.'
+          ]
+        },
+        {
+          id: 'math-4-m3',
+          titre: 'Théorème de Pythagore & Sa Réciproque',
+          duree: '12h',
+          objectifs: 'Calculer la longueur d\'un côté dans un triangle rectangle et démontrer qu\'un triangle est rectangle.',
+          resume: 'Théorème direct : Si un triangle ABC est rectangle en A, alors BC² = AB² + AC² (le carré de l\'hypoténuse est égal à la somme des carrés des deux autres côtés). Réciproque : si BC² = AB² + AC², alors le triangle est rectangle en A.',
+          exercices: [
+            'Dans un triangle ABC rectangle en A, avec AB = 6 cm et AC = 8 cm, calculer la longueur BC.',
+            'Un triangle dont les côtés mesurent 5 cm, 12 cm et 13 cm est-il rectangle ? Justifier.'
+          ]
+        },
+        {
+          id: 'math-4-m4',
+          titre: 'Trigonométrie dans le Triangle Rectangle (Cosinus)',
+          duree: '8h',
+          objectifs: 'Définition du cosinus d\'un angle aigu : cos(Â) = Côté Adjacent / Hypoténuse ; calcul d\'angles et de longueurs.',
+          resume: 'Dans un triangle rectangle, pour un angle aigu α, cos(α) est toujours compris entre 0 et 1 (0 < cos(α) < 1). On utilise la calculatrice pour trouver la mesure d\'un angle connaissant son cosinus (touche cos⁻¹ ou arccos).',
+          exercices: [
+            'Dans un triangle DEF rectangle en D avec DE = 5 cm et EF = 10 cm, calculer cos(Ê) puis en déduire la mesure de l\'angle Ê.',
+            'Calculer la hauteur d\'un arbre projetant une ombre de 15 m lorsque l\'angle avec le soleil est de 40°.'
           ]
         }
       ]
@@ -459,85 +328,105 @@ Si dans un triangle $ABC$, le plus grand côté vérifie $BC^2 = AB^2 + AC^2$, a
   },
 
   '3eme': {
-    classeTitle: 'Classe de 3ème (Préparation BEPC)',
-    niveauBadge: 'Examen Officiel - BEPC',
-    cycle: '1er Cycle (Examen d\'État)',
+    classeTitle: 'Classe de 3ème / Examen BEPC',
+    niveauBadge: 'Niveau 4 - Examen Officiel',
+    cycle: 'Fin du 1er Cycle Secondaire',
+    infoColor: 'emerald',
+    mathColor: 'teal',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC pour le BEPC : Tableaux 1D/2D, programmation Web (HTML/CSS/JS), bases de données relationnelles et maintenance PC.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC / BEPC : Structures de données avancées (tableaux 1D/2D), algorithmique complète, JavaScript et modélisation des systèmes d\'information.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-3-m1',
-              sequence: 'Séquence 1',
-              titre: 'Structures de Données : Tableaux à une Dimension (Vecteurs)',
-              duree: '12h de cours + 8h TD/TP',
-              objectifs: 'Déclarer un tableau, le remplir avec une boucle Pour, calculer la moyenne, rechercher le maximum et trier des valeurs.',
-              coursComplet: `
-### 1. Qu'est-ce qu'un Tableau (Array) ?
-Un tableau est une variable indicée capable de stocker sous un même nom plusieurs valeurs de **même type**.
-- Déclaration : \`T : Tableau[1..N] de Reel;\`
-- Accès à l'élément à l'indice i : \`T[i]\`
-
-### 2. Parcours et Somme d'un Tableau
-\`\`\`text
-Algorithme SommeTableau
-Variables
-   T : Tableau[1..10] d'Entiers;
-   i, Somme : Entier;
-Début
-   Somme <- 0;
-   Pour i de 1 à 10 Faire
-      Ecrire("Entrez la note ", i, " : ");
-      Lire(T[i]);
-      Somme <- Somme + T[i];
-   FinPour
-   Ecrire("Moyenne = ", Somme / 10);
-Fin
-\`\`\`
-              `,
-              exercices: [
-                {
-                  question: 'Écrire l\'algorithme qui recherche la note maximale dans un tableau T de 20 notes réelles.',
-                  correction: 'Algorithme NoteMax\nVariables T : Tableau[1..20] de Reel; i : Entier; Max : Reel;\nDébut\n  Max <- T[1];\n  Pour i de 2 à 20 Faire\n    Si T[i] > Max Alors\n      Max <- T[i];\n    FinSi\n  FinPour\n  Ecrire("Note maximale = ", Max);\nFin'
-                }
-              ]
-            }
+          id: 'info-3-m1',
+          titre: 'Structures de Données : Tableaux à 1 & 2 Dimensions',
+          duree: '10h',
+          objectifs: 'Déclarer un tableau, accéder aux indices T[i], calculer la somme, moyenne, recherche du max/min et tri.',
+          resume: 'Un tableau est une suite ordonnée d\'éléments de même type repérés par un indice numérique (de 1 à N ou 0 à N-1). Parcours séquentiel avec une boucle Pour : calcul d\'indicateurs statistiques et recherche linéaire.',
+          exercices: [
+            'Écrire l\'algorithme complet de saisie des notes de 30 élèves dans un tableau et d\'affichage de la moyenne générale.',
+            'Écrire l\'algorithme de recherche de la note maximale et du nombre d\'élèves ayant la moyenne (≥ 10/20).'
+          ]
+        },
+        {
+          id: 'info-3-m2',
+          titre: 'Programmation Web Interactive avec JavaScript',
+          duree: '10h',
+          objectifs: 'Manipuler les événements (onclick, onsubmit), variables, fonctions et validation de formulaires.',
+          resume: 'JavaScript est le langage de programmation côté client qui apporte l\'interactivité aux pages web. Les fonctions permettent d\'encapsuler du code réutilisable et d\'interagir dynamiquement avec le DOM (Document Object Model).',
+          exercices: [
+            'Créer une fonction JavaScript qui vérifie qu\'un champ mot de passe comporte au moins 8 caractères avant la soumission.',
+            'Écrire un script modifiant le texte d\'un élément HTML lors du clic sur un bouton.'
+          ]
+        },
+        {
+          id: 'info-3-m3',
+          titre: 'Modélisation des Systèmes d\'Information (Méthode MERISE)',
+          duree: '8h',
+          objectifs: 'Construire un Modèle Conceptuel de Données (MCD) avec entités, attributs, identifiants et cardinalités.',
+          resume: 'La méthode MERISE permet de concevoir une base de données cohérente. Concepts clés : Entité (ex: LIVRE, EMPRUNTEUR), Relation/Association (ex: EMPRUNTER), Cardinalités (0,1 ; 1,1 ; 0,n ; 1,n) et passage au Modèle Logique de Données (MLD).',
+          exercices: [
+            'Concevoir le MCD d\'une pharmacie pour la gestion des médicaments et des ventes aux clients.',
+            'Déterminer les clés primaires et étrangères résultant de la transformation en MLD.'
+          ]
+        },
+        {
+          id: 'info-3-m4',
+          titre: 'Révisions Générales & Méthodologie Examen BEPC',
+          duree: '12h',
+          objectifs: 'Résolution méthodique des sujets types BEPC session MINESEC (théorie, pratique, algorithmique, réseaux).',
+          resume: 'Synthèse des 4 années du premier cycle : matériel, réseaux LAN/WAN, internet, tableurs, bases de données, sécurité informatique, algorithmique sur tableaux et rédaction rigoureuse des réponses d\'examen.',
+          exercices: [
+            'Résoudre l\'épreuve nationale BEPC 2024 (partie théorique et pratique).',
+            'Corriger les erreurs fréquentes de syntaxe dans les algorithmes proposés aux examens.'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC pour le BEPC : Racines carrées, calcul littéral (identités remarquables), trigonométrie, équations/inéquations et statistiques.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC / BEPC : Racines carrées, identités remarquables, factorisations avancées, systèmes d\'équations linéaires, théorème de Thalès, trigonométrie et statistiques complètes.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-3-m1',
-              sequence: 'Séquence 1',
-              titre: 'Calcul Littéral & Identités Remarquables au BEPC',
-              duree: '14h de cours + 8h Exercices',
-              objectifs: 'Développer, factoriser et réduire des expressions algébriques à l\'aide des 3 identités remarquables.',
-              coursComplet: `
-### 1. Les 3 Identités Remarquables Fondamentales
-1. **Carré d'une somme :** $(a + b)^2 = a^2 + 2ab + b^2$
-2. **Carré d'une différence :** $(a - b)^2 = a^2 - 2ab + b^2$
-3. **Produit d'une somme par leur différence :** $(a + b)(a - b) = a^2 - b^2$
-
-### 2. Factorisation d'Expressions
-Factoriser, c'est transformer une somme ou différence en un produit de facteurs.
-- Exemple 1 : $4x^2 - 9 = (2x)^2 - 3^2 = (2x - 3)(2x + 3)$.
-- Exemple 2 : $x^2 + 6x + 9 = (x + 3)^2$.
-              `,
-              exercices: [
-                {
-                  question: 'Développer et réduire E = (3x - 5)² - (2x + 1)(2x - 1).',
-                  correction: 'E = (9x² - 30x + 25) - (4x² - 1) = 9x² - 30x + 25 - 4x² + 1 = 5x² - 30x + 26.'
-                }
-              ]
-            }
+          id: 'math-3-m1',
+          titre: 'Racines Carrées & Calcul Numérique Avancé',
+          duree: '12h',
+          objectifs: 'Propriétés de √a : √(a×b) = √a × √b, simplification sous la forme a√b et rendre rationnel le dénominateur.',
+          resume: 'Pour tout réel positif a, √a est le nombre positif dont le carré vaut a. Règle fondamentale : √(a+b) ≠ √a + √b. Rendre rationnel le dénominateur d\'une fraction en multipliant par l\'expression conjuguée.',
+          exercices: [
+            'Écrire sous la forme a√b : A = √75 - 2√27 + √12.',
+            'Rendre rationnel le dénominateur de la fraction : 4 / (√5 - 1).'
+          ]
+        },
+        {
+          id: 'math-3-m2',
+          titre: 'Identités Remarquables & Systèmes d\'Équations (2x2)',
+          duree: '14h',
+          objectifs: 'Maîtriser les 3 identités remarquables et résoudre des systèmes de deux équations à deux inconnues (substitution, combinaison).',
+          resume: '1) (a+b)² = a² + 2ab + b² ; 2) (a-b)² = a² - 2ab + b² ; 3) (a-b)(a+b) = a² - b². Résolution de systèmes linéaires ax + by = c et a\'x + b\'y = c\' par la méthode de substitution ou des combinaisons linéaires.',
+          exercices: [
+            'Factoriser l\'expression : F = (2x - 3)² - (x + 5)².',
+            'Résoudre le système d\'équations : { 2x + 3y = 28 ; 5x - y = 19 }.'
+          ]
+        },
+        {
+          id: 'math-3-m3',
+          titre: 'Théorème de Thalès & Sa Réciproque',
+          duree: '12h',
+          objectifs: 'Calculer des longueurs proportionnelles dans le triangle ou la configuration papillon et prouver le parallélisme.',
+          resume: 'Si (d) et (d\') sont deux droites sécantes en A, B et M sur (d), C et N sur (d\') tels que (BC) // (MN), alors : AM/AB = AN/AC = MN/BC. La réciproque permet de démontrer que deux droites sont strictement parallèles.',
+          exercices: [
+            'Dans un triangle ABC, avec M sur [AB] et N sur [AC], AB = 8 cm, AM = 3 cm, AC = 12 cm. Calculer AN pour que (MN) soit parallèle à (BC).',
+            'Appliquer le théorème de Thalès pour mesurer la largeur inaccessible d\'une rivière.'
+          ]
+        },
+        {
+          id: 'math-3-m4',
+          titre: 'Trigonométrie Complète & Angles Inscrits',
+          duree: '10h',
+          objectifs: 'Sinus, Cosinus, Tangente dans le triangle rectangle ; relation fondamentale cos²(x) + sin²(x) = 1 et angles inscrits.',
+          resume: 'Formules mnémotechniques SOH-CAH-TOA : sin(α) = Opposé/Hypoténuse ; cos(α) = Adjacent/Hypoténuse ; tan(α) = Opposé/Adjacent. Théorème de l\'angle au centre : la mesure de l\'angle au centre est le double de celle de l\'angle inscrit interceptant le même arc.',
+          exercices: [
+            'Sachant que cos(x) = 3/5 pour un angle aigu x, calculer la valeur exacte de sin(x) et tan(x).',
+            'Démontrer que deux angles inscrits interceptant le même arc de cercle sont égaux.'
           ]
         }
       ]
@@ -545,73 +434,105 @@ Factoriser, c'est transformer une somme ou différence en un produit de facteurs
   },
 
   '2nde': {
-    classeTitle: 'Classe de Seconde (2nde A / C / TI)',
-    niveauBadge: '2nd Cycle - Détermination',
-    cycle: '2nd Cycle de l\'Enseignement Secondaire',
+    classeTitle: 'Classe de Seconde (2nde A / C / SES / TI)',
+    niveauBadge: 'Niveau 5 - 2nd Cycle',
+    cycle: 'Cycle de Détermination',
+    infoColor: 'teal',
+    mathColor: 'emerald',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC : Numération binaire/hexadécimale, codage de l\'information, initiation au langage Python et maintenance logicielle.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Représentation et codage de l\'information (binaire, hexadécimal, ASCII/Unicode), architecture interne de l\'ordinateur, logique booléenne et introduction à Python.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-2-m1',
-              sequence: 'Séquence 1',
-              titre: 'Systèmes de Numération : Binaire, Décimal & Hexadécimal',
-              duree: '12h de cours + 6h TD',
-              objectifs: 'Convertir un nombre d\'une base à une autre (Base 10, Base 2, Base 16) et effectuer des additions binaires.',
-              coursComplet: `
-### 1. Pourquoi le binaire en informatique ?
-Le microprocesseur est composé de transistors fonctionnant comme des interrupteurs (0 = courant ne passe pas, 1 = courant passe). Chaque chiffre binaire (0 ou 1) est un **Bit** (Binary Digit).
-Un groupe de 8 bits forme un **Octet** (Byte).
-
-### 2. Conversions de Bases
-- **Binaire vers Décimal :** $(1101)_2 = 1 \times 2^3 + 1 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 = 8 + 4 + 0 + 1 = (13)_{10}$.
-- **Décimal vers Binaire :** On effectue des divisions successives par 2 et on relève les restes du dernier au premier.
-- **Hexadécimal (Base 16) :** Utilise les chiffres de 0 à 9 et les lettres A (10), B (11), C (12), D (13), E (14), F (15).
-              `,
-              exercices: [
-                {
-                  question: 'Convertir le nombre décimal 45 en base 2.',
-                  correction: '45 ÷ 2 = 22 reste 1\n22 ÷ 2 = 11 reste 0\n11 ÷ 2 = 5 reste 1\n5 ÷ 2 = 2 reste 1\n2 ÷ 2 = 1 reste 0\n1 ÷ 2 = 0 reste 1\nRésultat : (45)₁₀ = (101101)₂.'
-                }
-              ]
-            }
+          id: 'info-2nde-m1',
+          titre: 'Codage & Numération : Binaire, Décimal & Hexadécimal',
+          duree: '12h',
+          objectifs: 'Convertir entre bases 2, 10 et 16 ; comprendre le codage des caractères et des nombres entiers signés.',
+          resume: 'L\'ordinateur ne manipule que des états binaires 0 et 1 (bits). Un octet = 8 bits (256 valeurs de 0 à 255). Conversions : division successive par la base et puissances de 2 (1, 2, 4, 8, 16, 32, 64, 128). La base 16 (hexadécimale : 0-9, A-F) simplifie la notation des adresses mémoire et codes couleurs RGB.',
+          exercices: [
+            'Convertir le nombre décimal 197 en base binaire et en base hexadécimale.',
+            'Effectuer l\'addition binaire de (101101)₂ et (11011)₂.'
+          ]
+        },
+        {
+          id: 'info-2nde-m2',
+          titre: 'Architecture Interne : Processeur (CPU), Bus & Mémoires',
+          duree: '10h',
+          objectifs: 'Structure de Von Neumann : unité de commande, unité arithmétique et logique (UAL), registres, bus de données/adresses.',
+          resume: 'L\'architecture de Von Neumann est le modèle de base de l\'informatique moderne. Le cycle d\'instruction comprend : Fetch (recherche en mémoire), Decode (décodage de l\'instruction), Execute (exécution par l\'UAL) et Store (écriture du résultat).',
+          exercices: [
+            'Détailler le rôle du compteur ordinal (PC) et du registre d\'instruction (IR) dans l\'exécution d\'un programme.',
+            'Distinguer la mémoire cache L1/L2/L3, la RAM et la mémoire morte ROM.'
+          ]
+        },
+        {
+          id: 'info-2nde-m3',
+          titre: 'Algèbre de Boole & Circuits Logiques',
+          duree: '10h',
+          objectifs: 'Portes logiques de base (ET, OU, NON, NAND, NOR, XOR), tables de vérité et simplification d\'équations booléennes.',
+          resume: 'L\'algèbre de Boole traite des variables binaires (0 ou 1). Théorèmes fondamentaux de De Morgan : NON(A ET B) = NON(A) OU NON(B) et NON(A OU B) = NON(A) ET NON(B). Réalisation de circuits combinatoires comme l\'additionneur binaire.',
+          exercices: [
+            'Dresser la table de vérité de la fonction F = (A OU B) ET (NON(A) OU C).',
+            'Simplifier l\'expression booléenne S = A.B + A.B̄.'
+          ]
+        },
+        {
+          id: 'info-2nde-m4',
+          titre: 'Initiation à la Programmation Python',
+          duree: '12h',
+          objectifs: 'Variables, types fondamentaux (int, float, str, list), conditions if/elif/else et boucles for/while en syntaxe Python.',
+          resume: 'Python est un langage interprété, lisible et puissant. Indentation obligatoire, gestion des listes (append, len, range), définition de fonctions avec le mot-clé `def` et traitement de données.',
+          exercices: [
+            'Écrire un script Python qui prend une liste de nombres et retourne la moyenne arithmétique et le nombre de valeurs paires.',
+            'Créer un jeu en Python où l\'ordinateur choisit un nombre aléatoire entre 1 et 100 et l\'utilisateur doit le deviner.'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC : Ensembles de nombres, calcul dans R, équations et inéquations du 2nd degré, vecteurs du plan et fonctions numériques.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC : Ensembles de nombres, calcul algébrique, fonctions d\'une variable réelle (généralités, variations, parité), équations et inéquations du 2nd degré, vecteurs du plan et trigonométrie circulaire.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-2-m1',
-              sequence: 'Séquence 1',
-              titre: 'Polynômes du Second Degré : Forme Canonique & Discriminant',
-              duree: '14h de cours + 8h TD',
-              objectifs: 'Résoudre toute équation $ax^2+bx+c=0$ dans R à l\'aide du discriminant Delta.',
-              coursComplet: `
-### 1. Formule du Discriminant $\\Delta$
-Pour toute équation $ax^2 + bx + c = 0$ avec $a \neq 0$ :
-$$\\Delta = b^2 - 4ac$$
-
-### 2. Discussion du Nombre de Solutions Réelles
-- **Si $\\Delta > 0$ :** Deux solutions réelles distinctes :
-  $$x_1 = \\frac{-b - \\sqrt{\\Delta}}{2a}, \\quad x_2 = \\frac{-b + \\sqrt{\\Delta}}{2a}$$
-- **Si $\\Delta = 0$ :** Une solution double :
-  $$x_0 = \\frac{-b}{2a}$$
-- **Si $\\Delta < 0$ :** Aucune solution dans $\\mathbb{R}$ ($S = \\emptyset$).
-              `,
-              exercices: [
-                {
-                  question: 'Résoudre dans R l\'équation : 2x² - 5x + 2 = 0.',
-                  correction: 'a = 2, b = -5, c = 2.\nΔ = (-5)² - 4(2)(2) = 25 - 16 = 9 = 3² > 0.\nx₁ = (5 - 3)/(2×2) = 2/4 = 1/2.\nx₂ = (5 + 3)/4 = 8/4 = 2.\nS = {1/2, 2}.'
-                }
-              ]
-            }
+          id: 'math-2nde-m1',
+          titre: 'Ensembles de Nombres, Intervalles & Valeur Absolue',
+          duree: '12h',
+          objectifs: 'Inclusions ℕ ⊂ ℤ ⊂ ⅅ ⊂ ℚ ⊂ ℝ ; opérations sur les intervalles (union ∪, intersection ∩) et propriétés de |x|.',
+          resume: 'Tout réel x admet une valeur absolue |x| représentant sa distance à 0 sur la droite numérique. Propriétés : |x| ≥ 0, |x × y| = |x| × |y| et l\'inégalité triangulaire |x + y| ≤ |x| + |y|. Résolution d\'inéquations du type |x - a| ≤ r sous forme d\'intervalle [a-r ; a+r].',
+          exercices: [
+            'Résoudre dans ℝ l\'équation |2x - 3| = 7 et l\'inéquation |x + 4| < 3.',
+            'Déterminer l\'intersection et l\'union des intervalles I = [-5 ; 3[ et J = ]1 ; 8].'
+          ]
+        },
+        {
+          id: 'math-2nde-m2',
+          titre: 'Généralités sur les Fonctions & Étude Graphique',
+          duree: '14h',
+          objectifs: 'Ensemble de définition, parité (paire / impaire), sens de variation, extremums locaux et lecture graphique.',
+          resume: 'Une fonction f associe à tout réel x de son domaine Df un unique réel f(x). Une fonction est paire si f(-x) = f(x) (symétrie par rapport à l\'axe des ordonnées) ; impaire si f(-x) = -f(x) (symétrie par rapport à l\'origine). Fonctions de référence : x ↦ x², x ↦ 1/x, x ↦ √x.',
+          exercices: [
+            'Déterminer l\'ensemble de définition de la fonction f(x) = √(3x - 6) / (x² - 9).',
+            'Étudier la parité de la fonction g(x) = 3x³ - 5x sur ℝ.'
+          ]
+        },
+        {
+          id: 'math-2nde-m3',
+          titre: 'Polynômes du Second Degré : Forme Canonique & Discriminant',
+          duree: '14h',
+          objectifs: 'Mise sous forme canonique de ax² + bx + c, calcul du discriminant Δ = b² - 4ac, factorisation et tableau de signes.',
+          resume: 'Si Δ > 0, deux racines réelles distinctes x₁ = (-b - √Δ)/2a et x₂ = (-b + √Δ)/2a ; si Δ = 0, racine double x₀ = -b/2a ; si Δ < 0, aucune racine réelle. Signe du trinôme : du signe de a à l\'extérieur des racines et du signe de -a entre les racines.',
+          exercices: [
+            'Résoudre dans ℝ l\'équation : 2x² - 5x - 3 = 0.',
+            'Dresser le tableau de signes et résoudre l\'inéquation : -3x² + 7x - 2 ≥ 0.'
+          ]
+        },
+        {
+          id: 'math-2nde-m4',
+          titre: 'Vecteurs du Plan, Repérage & Produit Scalaire Introductif',
+          duree: '12h',
+          objectifs: 'Colinéarité de deux vecteurs (déterminant xy\' - x\'y = 0), coordonnées du milieu, distance entre deux points et barycentre.',
+          resume: 'Deux vecteurs non nuls u(x,y) et v(x\',y\') sont colinéaires si et seulement si xy\' - x\'y = 0. Dans un repère orthonormé (O, i, j), la distance AB = √[(xB - xA)² + (yB - yA)²]. Barycentre de deux points pondérés (A, α) et (B, β) avec α + β ≠ 0.',
+          exercices: [
+            'Les points A(-2 ; 1), B(2 ; 3) et C(6 ; 5) sont-ils alignés ? Justifier à l\'aide des vecteurs.',
+            'Construire le barycentre G des points pondérés (A, 2) et (B, 3).'
           ]
         }
       ]
@@ -619,82 +540,105 @@ $$\\Delta = b^2 - 4ac$$
   },
 
   '1ere': {
-    classeTitle: 'Classe de Première (1ère C / D / TI - Probatoire)',
-    niveauBadge: 'Examen Officiel - Probatoire',
-    cycle: '2nd Cycle (Préparation Probatoire)',
+    classeTitle: 'Classe de Première (1ère C / D / A / TI) - Probatoire',
+    niveauBadge: 'Niveau 6 - Examen Probatoire',
+    cycle: 'Préparation au Probatoire',
+    infoColor: 'purple',
+    mathColor: 'indigo',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC : Programmation structurée en C et Python, bases de données relationnelles SQL et réseaux locaux d\'entreprise.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC / Probatoire : Systèmes de gestion de bases de données relationnelles avancées (SQL DDL/DML), programmation procédurale en C/Python, réseaux IP et sécurité des SI.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-1-m1',
-              sequence: 'Séquence 1',
-              titre: 'Programmation en Langage C & Python : Fonctions & Procédures',
-              duree: '16h de cours + 10h TP',
-              objectifs: 'Modulariser un programme à l\'aide de fonctions avec passage de paramètres par valeur et par adresse.',
-              coursComplet: `
-### 1. Les Fonctions en Langage C
-Une fonction permet de découper un problème complexe en sous-programmes réutilisables.
-\`\`\`c
-#include <stdio.h>
-
-// Déclaration de la fonction factorielle
-long factorielle(int n) {
-    if (n <= 1) return 1;
-    return n * factorielle(n - 1);
-}
-
-int main() {
-    int nombre = 5;
-    printf("La factorielle de %d est : %ld\\n", nombre, factorielle(nombre));
-    return 0;
-}
-\`\`\`
-              `,
-              exercices: [
-                {
-                  question: 'Écrire en langage C une fonction booléenne estPremier(int n) qui renvoie 1 si n est premier, 0 sinon.',
-                  correction: 'int estPremier(int n) {\n  if (n <= 1) return 0;\n  for (int i = 2; i * i <= n; i++) {\n    if (n % i == 0) return 0;\n  }\n  return 1;\n}'
-                }
-              ]
-            }
+          id: 'info-1ere-m1',
+          titre: 'Bases de Données Relationnelles & Requêtes SQL Avancées',
+          duree: '14h',
+          objectifs: 'Création de tables (CREATE TABLE, contraintes PRIMARY KEY, FOREIGN KEY, NOT NULL), jointures JOIN et fonctions d\'agrégation.',
+          resume: 'SQL (Structured Query Language) comprend le LDD (Langage de Définition de Données) et le LMD (Langage de Manipulation de Données). Les jointures (INNER JOIN, LEFT JOIN) permettent d\'extraire des données réparties sur plusieurs tables reliées par des clés étrangères.',
+          exercices: [
+            'Écrire le script SQL de création d\'une base de gestion des notes scolaires avec intégrité référentielle.',
+            'Rédiger une requête avec jointure affichant le nom de l\'élève, la matière et la moyenne obtenue, ordonnée par ordre décroissant.'
+          ]
+        },
+        {
+          id: 'info-1ere-m2',
+          titre: 'Programmation Procédurale & Fonctions en C / Python',
+          duree: '14h',
+          objectifs: 'Passage de paramètres par valeur et par adresse (pointeurs en C), modularité, fonctions récursives et structures de données.',
+          resume: 'La programmation modulaire découpe un problème complexe en sous-programmes (fonctions et procédures). Une fonction récursive est une fonction qui s\'appelle elle-même avec une condition de terminaison (cas de base) pour éviter une boucle infinie.',
+          exercices: [
+            'Écrire une fonction récursive en C ou Python qui calcule le n-ième terme de la suite de Fibonacci.',
+            'Créer un programme qui recherche un élément dans un tableau trié par dichotomie (recherche binaire O(log N)).'
+          ]
+        },
+        {
+          id: 'info-1ere-m3',
+          titre: 'Réseaux Informatiques : Modèle OSI & Adressage IP (IPv4)',
+          duree: '12h',
+          objectifs: 'Les 7 couches du modèle OSI, classes d\'adresses IPv4 (A, B, C), masques de sous-réseau et calcul de plages d\'hôtes.',
+          resume: 'Le modèle OSI (Physique, Liaison, Réseau, Transport, Session, Présentation, Application) standardise les communications. L\'adresse IPv4 sur 32 bits est découpée en NetID et HostID via le masque de sous-réseau (ex: 255.255.255.0 = /24).',
+          exercices: [
+            'Pour l\'adresse IP 192.168.10.75/26, calculer l\'adresse réseau, l\'adresse de diffusion (broadcast) et le nombre d\'hôtes utilisables.',
+            'Expliquer la différence fondamentale entre les protocoles de transport TCP (orienté connexion) et UDP (non connecté).'
+          ]
+        },
+        {
+          id: 'info-1ere-m4',
+          titre: 'Sécurité Informatique, Cryptographie & Éthique Numérique',
+          duree: '10h',
+          objectifs: 'Principes de sécurité (DICP : Disponibilité, Intégrité, Confidentialité, Preuve), chiffrement symétrique/asymétrique et législation.',
+          resume: 'La cybersécurité protège les systèmes d\'information contre les cyberattaques. Le chiffrement symétrique (ex: AES) utilise une seule clé secrète partagée, tandis que le chiffrement asymétrique (ex: RSA) utilise une paire de clés publique/privée.',
+          exercices: [
+            'Expliquer le fonctionnement d\'une signature numérique garantissant l\'authenticité et l\'intégrité d\'un message.',
+            'Analyser une étude de cas d\'attaque par hameçonnage (phishing) et proposer les mesures de remédiation.'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC pour le Probatoire : Dérivation, études de fonctions, barycentres, suites numériques et trigonométrie.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC / Probatoire : Dérivabilité et études de fonctions, suites numériques arithmétiques et géométriques, trigonométrie circulaire, barycentres dans le plan et l\'espace, dénombrement et probabilités simples.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-1-m1',
-              sequence: 'Séquence 1',
-              titre: 'Dérivation & Étude des Fonctions Numériques',
-              duree: '16h de cours + 10h TD',
-              objectifs: 'Calculer la fonction dérivée f\'(x), déterminer le signe de f\'(x), dresser le tableau de variations et tracer la courbe représentative.',
-              coursComplet: `
-### 1. Formules Usuelles de Dérivation
-- $(x^n)' = n x^{n-1}$
-- $(u + v)' = u' + v'$
-- $(u \\times v)' = u'v + uv'$
-- $\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^2}$
-
-### 2. Théorème du Sens de Variation
-- Si $f'(x) > 0$ sur un intervalle $I$, alors $f$ est **strictement croissante** sur $I$.
-- Si $f'(x) < 0$ sur un intervalle $I$, alors $f$ est **strictement décroissante** sur $I$.
-- Si $f'(x) = 0$ et change de signe, la fonction admet un **extremum local**.
-              `,
-              exercices: [
-                {
-                  question: 'Soit f(x) = x³ - 3x + 2. Déterminer f\'(x) et dresser le tableau de variations de f sur R.',
-                  correction: 'f\'(x) = 3x² - 3 = 3(x² - 1) = 3(x - 1)(x + 1).\nf\'(x) s\'annule en -1 et 1.\n• Sur ]-∞; -1], f\'(x) > 0 => f croissante.\n• Sur [-1; 1], f\'(x) < 0 => f décroissante.\n• Sur [1; +∞[, f\'(x) > 0 => f croissante.'
-                }
-              ]
-            }
+          id: 'math-1ere-m1',
+          titre: 'Limites de Fonctions & Continuité',
+          duree: '14h',
+          objectifs: 'Calculs de limites en l\'infini et en un point, formes indéterminées (0/0, ∞/∞, +∞ - ∞, 0×∞) et asymptotes (verticale, horizontale, oblique).',
+          resume: 'Une fonction f admet pour asymptote verticale la droite d\'équation x = a si lim(x→a) f(x) = ±∞ ; une asymptote horizontale d\'équation y = L si lim(x→±∞) f(x) = L. Levée d\'indéterminée par factorisation du terme prépondérant ou multiplication par l\'expression conjuguée.',
+          exercices: [
+            'Calculer : lim(x→+∞) (2x² - 3x + 1) / (5x² + 7) et lim(x→2) (x² - 4) / (x - 2).',
+            'Démontrer que la droite y = 2x - 1 est asymptote oblique à la courbe de f(x) = (2x² - x + 3)/(x + 1).'
+          ]
+        },
+        {
+          id: 'math-1ere-m2',
+          titre: 'Dérivation & Étude Complète de Fonctions',
+          duree: '16h',
+          objectifs: 'Formules de dérivées usuelles, dérivée d\'un quotient u/v, sens de variation, extremums, équation de la tangente et tracé de courbe.',
+          resume: 'Le nombre dérivé f\'(a) est la pente de la tangente au point d\'abscisse a : T : y = f\'(a)(x - a) + f(a). Si f\'(x) > 0 sur un intervalle I, alors f est strictement croissante sur I ; si f\'(x) < 0, f est strictement décroissante.',
+          exercices: [
+            'Déterminer la fonction dérivée de f(x) = (3x - 1) / (x² + 2) et dresser son tableau de variations.',
+            'Écrire l\'équation de la tangente à la courbe au point d\'abscisse x₀ = 1.'
+          ]
+        },
+        {
+          id: 'math-1ere-m3',
+          titre: 'Suites Numériques : Arithmétiques & Géométriques',
+          duree: '12h',
+          objectifs: 'Formules du terme général Un, somme des n premiers termes, sens de variation et convergence.',
+          resume: 'Suite arithmétique de raison r : Un = U₀ + n.r ; somme S = n × (premier + dernier) / 2. Suite géométrique de raison q : Un = U₀ × qⁿ ; somme S = premier × (1 - qⁿ) / (1 - q) pour q ≠ 1.',
+          exercices: [
+            'Soit (Un) une suite arithmétique telle que U₃ = 11 et U₇ = 23. Calculer la raison r, le premier terme U₀ et U₂₀.',
+            'Calculer la somme : S = 1 + 2 + 4 + 8 + ... + 1024.'
+          ]
+        },
+        {
+          id: 'math-1ere-m4',
+          titre: 'Barycentres & Lignes de Niveau dans le Plan',
+          duree: '12h',
+          objectifs: 'Barycentre de 3 ou 4 points pondérés, théorème du barycentre partiel (associativité) et ensembles de points.',
+          resume: 'Le point G est le barycentre de {(A, α), (B, β), (C, γ)} avec α+β+γ ≠ 0 si et seulement si α.GA + β.GB + γ.GC = 0 (vecteurs). Pour tout point M du plan : α.MA + β.MB + γ.MC = (α+β+γ).MG. Détermination de lignes de niveau de l\'application M ↦ ||α.MA + β.MB||.',
+          exercices: [
+            'Soit ABC un triangle. Construire le barycentre G de {(A, 1), (B, 2), (C, -1)}.',
+            'Déterminer l\'ensemble des points M du plan tels que ||MA + 2MB - MC|| = 6.'
           ]
         }
       ]
@@ -702,83 +646,105 @@ int main() {
   },
 
   'tle': {
-    classeTitle: 'Classe de Terminale (Tle C / D / TI - Baccalauréat)',
-    niveauBadge: 'Examen Officiel - Baccalauréat',
-    cycle: '2nd Cycle (Baccalauréat National)',
+    classeTitle: 'Classe de Terminale (Tle C / D / A / TI) - Baccalauréat',
+    niveauBadge: 'Niveau 7 - Examen du Baccalauréat',
+    cycle: 'Cycle Terminal d\'Excellence',
+    infoColor: 'rose',
+    mathColor: 'red',
     matiereInformatique: {
-      description: 'Programme officiel MINESEC pour le Baccalauréat : Programmation Orientée Objet (POO), Arbres Binaires de Recherche (ABR), Graphes et Réseaux sécurisés.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC / Baccalauréat : Programmation Orientée Objet (POO en Python/Java/C++), structures de données dynamiques (piles, files, arbres binaires, graphes), systèmes d\'exploitation & réseaux d\'entreprise, et sécurité avancée.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'info-t-m1',
-              sequence: 'Séquence 1',
-              titre: 'Programmation Orientée Objet (POO en Python / Java) & ABR',
-              duree: '18h de cours + 12h TP',
-              objectifs: 'Maîtriser les classes, objets, constructeurs, encapsulation, héritage et implémenter des arbres binaires de recherche.',
-              coursComplet: `
-### 1. Les Piliers de la POO
-- **Classe :** Modèle définissant les attributs (données) et les méthodes (comportements).
-- **Objet :** Instance concrète d'une classe.
-- **Encapsulation :** Protection des données internes via des modificateurs d'accès.
-
-\`\`\`python
-class CompteBancaire:
-    def __init__(self, titulaire, solde_initial=0):
-        self.__titulaire = titulaire
-        self.__solde = solde_initial
-
-    def deposer(self, montant):
-        if montant > 0:
-            self.__solde += montant
-            print(f"Dépôt de {montant} FCFA réussi. Nouveau solde : {self.__solde} FCFA")
-
-    def get_solde(self):
-        return self.__solde
-\`\`\`
-              `,
-              exercices: [
-                {
-                  question: 'Définir la différence entre un parcours préfixe, infixe et postfixe d\'un arbre binaire.',
-                  correction: '• Préfixe : Racine, Sous-arbre gauche, Sous-arbre droit (R-G-D).\n• Infixe : Sous-arbre gauche, Racine, Sous-arbre droit (G-R-D) -> donne les éléments triés dans un ABR.\n• Postfixe : Sous-arbre gauche, Sous-arbre droit, Racine (G-D-R).'
-                }
-              ]
-            }
+          id: 'info-tle-m1',
+          titre: 'Programmation Orientée Objet (POO) : Classes, Objets & Héritage',
+          duree: '16h',
+          objectifs: 'Concepts d\'encapsulation, instanciation, constructeurs, attributs, méthodes, héritage et polymorphisme.',
+          resume: 'La POO modélise des entités du monde réel sous forme d\'objets combinant état (attributs) et comportement (méthodes). Une classe est le patron (blueprint) permettant de créer des instances. L\'héritage permet à une sous-classe d\'étendre et spécialiser une classe mère.',
+          exercices: [
+            'Créer une classe CompteBancaire avec méthodes deposer(), retirer(), afficherSolde() et gestion du découvert.',
+            'Créer une classe dérivée CompteEpargne appliquant un taux d\'intérêt annuel.'
+          ]
+        },
+        {
+          id: 'info-tle-m2',
+          titre: 'Structures de Données Avancées : Piles, Files, Arbres & Graphes',
+          duree: '14h',
+          objectifs: 'Principe LIFO (Pile) et FIFO (File), arbres binaires de recherche (parcours préfixe, infixe, postfixe) et algorithmes sur graphes.',
+          resume: 'Les structures de données avancées optimisent le stockage et la rapidité d\'accès aux informations en mémoire. Un arbre binaire de recherche (ABR) permet des recherches en temps logarithmique O(log N) lorsque l\'arbre est équilibré.',
+          exercices: [
+            'Implémenter une Pile (Stack) avec les opérations empiler (push) et dépiler (pop).',
+            'Effectuer le parcours infixe d\'un arbre binaire de recherche et montrer que les valeurs obtenues sont triées.'
+          ]
+        },
+        {
+          id: 'info-tle-m3',
+          titre: 'Services Réseau d\'Entreprise : DHCP, DNS, Routage & Pare-feu',
+          duree: '12h',
+          objectifs: 'Fonctionnement des protocoles d\'infrastructure réseau, tables de routage, NAT/PAT et politiques de sécurité pare-feu.',
+          resume: 'DHCP attribue automatiquement des configurations IP aux postes clients ; le DNS traduit les noms de domaine en adresses IP ; les routeurs utilisent des protocoles de routage (statique, RIP, OSPF) pour déterminer le chemin optimal d\'acheminement des paquets.',
+          exercices: [
+            'Expliquer en détail les 4 phases du processus DHCP (DORA : Discover, Offer, Request, Acknowledge).',
+            'Configurer une règle de pare-feu iptables autorisant le trafic web HTTP/HTTPS et bloquant le reste.'
+          ]
+        },
+        {
+          id: 'info-tle-m4',
+          titre: 'Analyse, Conception Logicielle & Préparation Baccalauréat',
+          duree: '16h',
+          objectifs: 'Diagrammes UML (Cas d\'utilisation, Classes, Séquence), rédaction de code sans faute et résolution intégrale des épreuves du Baccalauréat.',
+          resume: 'UML (Unified Modeling Language) est le standard mondial de modélisation orientée objet. Révision complète des annales du Baccalauréat camerounais : modélisation, requêtes SQL complexes, POO et réseaux informatiques.',
+          exercices: [
+            'Modéliser le diagramme de classes UML d\'une plateforme d\'e-learning avec gestion des cours, devoirs et étudiants.',
+            'Résoudre l\'épreuve nationale du Baccalauréat 2024 (séries scientifiques et techniques).'
           ]
         }
       ]
     },
     matiereMathematiques: {
-      description: 'Programme officiel MINESEC pour le Baccalauréat : Nombres complexes, calcul intégral, équations différentielles et lois de probabilités.',
-      trimestres: [
+      description: 'Conforme au programme MINESEC / Baccalauréat : Nombres complexes, fonctions logarithme népérien et exponentielle, calcul intégral et équations différentielles, géométrie dans l\'espace, probabilités et lois de distribution.',
+      modules: [
         {
-          nom: 'Trimestre 1 (Séquences 1 & 2)',
-          modules: [
-            {
-              id: 'math-t-m1',
-              sequence: 'Séquence 1',
-              titre: 'Nombres Complexes : Forme Algébrique, Trigonométrique & Exponentielle',
-              duree: '20h de cours + 12h TD',
-              objectifs: 'Calculer le module et l\'argument d\'un nombre complexe, utiliser la formule de Moivre et d\'Euler, résoudre des équations dans C et géométrie complexe.',
-              coursComplet: `
-### 1. Forme Algébrique & Conjugué
-Tout nombre complexe $z$ s'écrit de manière unique :
-$$z = a + ib \\quad (a, b \\in \\mathbb{R}, i^2 = -1)$$
-- Module : $|z| = \\sqrt{a^2 + b^2}$
-- Conjugué : $\\bar{z} = a - ib$ avec $z \\cdot \\bar{z} = |z|^2 = a^2 + b^2$.
-
-### 2. Forme Trigonométrique et Exponentielle
-$$z = r(\\cos \\theta + i \\sin \\theta) = r e^{i\\theta}$$
-où $r = |z|$ et $\\theta = \\arg(z) \\pmod{2\\pi}$.
-              `,
-              exercices: [
-                {
-                  question: 'Déterminer le module et un argument principal de z = 1 + i√3. Donner sa forme exponentielle.',
-                  correction: '|z| = √(1² + (√3)²) = √(1 + 3) = √4 = 2.\ncos θ = 1/2 et sin θ = √3/2 => θ = π/3 [2π].\nForme exponentielle : z = 2 e^(iπ/3).'
-                }
-              ]
-            }
+          id: 'math-tle-m1',
+          titre: 'Nombres Complexes & Applications Géométriques',
+          duree: '18h',
+          objectifs: 'Forme algébrique a + ib, module |z|, argument arg(z), forme trigonométrique et exponentielle e^(iθ), formule de Moivre et d\'Euler, racines n-ièmes et transformations géométriques.',
+          resume: 'L\'ensemble ℂ contient un nombre imaginaire i tel que i² = -1. Tout complexe z s\'écrit z = a + ib = r.e^(iθ). Applications géométriques remarquables : distance AB = |zB - zA| et angle orienté (AB, CD) = arg((zD - zC)/(zB - zA)).',
+          exercices: [
+            'Résoudre dans ℂ l\'équation : z² - 2z + 4 = 0 et exprimer les solutions sous forme exponentielle.',
+            'Déterminer la nature et les éléments caractéristiques de la transformation géométrique d\'écriture complexe z\' = 2i.z + 1 - i.'
+          ]
+        },
+        {
+          id: 'math-tle-m2',
+          titre: 'Fonctions Logarithme Népérien (ln) & Exponentielle (exp)',
+          duree: '18h',
+          objectifs: 'Propriétés algébriques : ln(a×b) = ln(a)+ln(b), e^(a+b) = e^a × e^b ; limites usuelles (croissances comparées), dérivées et études de fonctions.',
+          resume: 'La fonction ln est la primitive de 1/x sur ]0 ; +∞[ qui s\'annule en 1. La fonction exponentielle exp(x) = e^x est la bijection réciproque de ln. Croissances comparées : lim(x→+∞) e^x / x^n = +∞ et lim(x→+∞) ln(x) / x^n = 0.',
+          exercices: [
+            'Résoudre dans ℝ l\'équation : ln(x + 3) + ln(x - 1) = ln(5).',
+            'Étudier la fonction f(x) = (x - 2).e^x + 1 : variations, limites aux bornes, branches infinies et tracé de la courbe.'
+          ]
+        },
+        {
+          id: 'math-tle-m3',
+          titre: 'Calcul Intégral, Primitives & Équations Différentielles',
+          duree: '16h',
+          objectifs: 'Calcul de primitives, intégration par parties (IPP), calcul d\'aires et volumes, résolution des équations différentielles y\' = ay + b et y\'\' + ω²y = 0.',
+          resume: 'L\'intégrale définie de a à b de f(x)dx est égale à F(b) - F(a) où F est une primitive de f. Intégration par parties : ∫ u(x)v\'(x)dx = [u(x)v(x)] - ∫ u\'(x)v(x)dx. Les solutions générales de y\' = ay sont de la forme y(x) = C.e^(ax).',
+          exercices: [
+            'Calculer l\'intégrale à l\'aide d\'une IPP : I = ∫₁ᵉ x.ln(x) dx.',
+            'Résoudre l\'équation différentielle 2y\' + 3y = 0 avec la condition initiale y(0) = 4.'
+          ]
+        },
+        {
+          id: 'math-tle-m4',
+          titre: 'Probabilités Conditionnelles & Variables Aléatoires',
+          duree: '14h',
+          objectifs: 'Arbres pondérés, formule des probabilités totales, loi binomiale B(n, p), espérance E(X), variance V(X) et écart-type.',
+          resume: 'Probabilité conditionnelle : P_B(A) = P(A ∩ B) / P(B). Formule des probabilités totales : P(A) = ∑ P(A ∩ Bi). Une épreuve de Bernoulli répétée n fois de manière indépendante donne une loi binomiale : P(X = k) = C_n^k × p^k × (1-p)^(n-k).',
+          exercices: [
+            'Une usine fabrique des composants électroniques avec un taux de défectuosité de 3%. On prélève un échantillon de 10 composants. Calculer la probabilité d\'avoir exactement 1 composant défectueux.',
+            'Calculer l\'espérance et l\'écart-type du gain dans un jeu de hasard équitable.'
           ]
         }
       ]
