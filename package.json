@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "node -e 'console.log(\"Build ready\")'"
+    "build": "node -e 'console.log(\"Build ready\")'",
+    "lint": "node --check server.js db.js renderHelper.js curriculumData.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
