@@ -10,6 +10,7 @@ import dotenv from 'dotenv';
 import { sanitize, escapeAttr, renderHeader, renderFooter } from './renderHelper.js';
 import { dbService, initDatabase, memoryDb as db } from './db.js';
 import { classesData, curriculum } from './curriculumData.js';
+import { answerStudentMessage, gradeStudentSubmission, generateEvaluationAI } from './aiService.js';
 
 dotenv.config();
 
@@ -1822,7 +1823,7 @@ app.get(['/verifier_statut_kpay.php', '/callback_kpay.php'], (req, res) => {
 });
 
 // =========================================================================
-// EVALUATIONS, HOMEWORK & QUIZZES
+// EVALUATIONS, HOMEWORK & QUIZZES (STUDENT SIDE)
 // =========================================================================
 app.get(['/repondre_evaluation.php', '/coursevaluation.php'], (req, res) => {
   if (!req.session || !req.session.user_id) {
@@ -1830,52 +1831,166 @@ app.get(['/repondre_evaluation.php', '/coursevaluation.php'], (req, res) => {
   }
 
   const user_id = req.session.user_id;
+  const user = db.users.find(u => u.id === user_id);
   const evaluations = db.evaluations;
 
   const html = `
   <div class="max-w-4xl mx-auto space-y-8">
-    <div class="border-b border-slate-200 pb-6">
-      <h1 class="text-3xl font-extrabold text-slate-900">Évaluations & Devoirs Pédagogiques</h1>
-      <p class="text-sm text-slate-500 mt-1">Rendez vos travaux en ligne et consultez les corrections et notes attribuées par les professeurs</p>
+    <div class="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 font-bold text-xs rounded-full mb-2">
+          <i class="fa-solid fa-graduation-cap"></i> Espace Pédagogique
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-900">Évaluations & Devoirs Notés</h1>
+        <p class="text-sm text-slate-500 mt-1">Rendez vos devoirs en ligne et découvrez vos notes et corrections détaillées personnalisées par l'IA et l'équipe enseignante.</p>
+      </div>
     </div>
 
     <div class="space-y-6">
       ${evaluations.map(evalItem => {
         const reponse = db.reponses.find(r => r.utilisateur_id === user_id && r.evaluation_id === evalItem.id);
+        const isGraded = reponse && reponse.note !== undefined && reponse.note !== null;
+        
         return `
-          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span class="px-3 py-1 bg-blue-50 text-blue-700 font-bold text-xs rounded-full border border-blue-100 w-fit">
-                Devoir #${evalItem.id}
-              </span>
-              <span class="text-xs text-slate-400">Date de parution : ${new Date(evalItem.date_creation).toLocaleDateString('fr-FR')}</span>
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6 transition hover:shadow-md">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+              <div class="flex items-center gap-3">
+                <span class="px-3 py-1 bg-blue-50 text-blue-700 font-bold text-xs rounded-full border border-blue-100">
+                  Devoir #${evalItem.id}
+                </span>
+                <span class="text-xs font-semibold text-slate-400">
+                  <i class="fa-regular fa-calendar-days mr-1"></i>
+                  ${new Date(evalItem.date_creation || Date.now()).toLocaleDateString('fr-FR')}
+                </span>
+              </div>
+
+              ${reponse ? (
+                isGraded ? `
+                  <div class="flex items-center gap-2">
+                    <span class="px-3.5 py-1.5 ${
+                      reponse.note >= 14 ? 'bg-emerald-100 text-emerald-800 border-emerald-200' :
+                      reponse.note >= 10 ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                      'bg-amber-100 text-amber-800 border-amber-200'
+                    } text-xs font-black rounded-full border flex items-center gap-1.5 shadow-sm">
+                      <i class="fa-solid fa-trophy"></i>
+                      <span>Note : ${reponse.note}/20</span>
+                    </span>
+                    <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-bold text-[11px] rounded-full border border-indigo-100">
+                      <i class="fa-solid fa-sparkles text-indigo-500"></i> Corrigé
+                    </span>
+                  </div>
+                ` : `
+                  <span class="px-3 py-1 bg-amber-50 text-amber-800 font-bold text-xs rounded-full border border-amber-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-spinner fa-spin text-amber-600"></i>
+                    <span>En attente de notation</span>
+                  </span>
+                `
+              ) : `
+                <span class="px-3 py-1 bg-slate-100 text-slate-600 font-bold text-xs rounded-full">
+                  À rendre
+                </span>
+              `}
             </div>
 
             <div class="space-y-2">
               <h3 class="text-xl font-bold text-slate-900">${sanitize(evalItem.titre)}</h3>
-              <p class="text-sm text-slate-600 leading-relaxed">${sanitize(evalItem.description)}</p>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed font-mono whitespace-pre-wrap">${sanitize(evalItem.description)}</div>
             </div>
 
             ${reponse ? `
-              <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Votre copie rendue :</span>
-                  ${reponse.note !== undefined && reponse.note !== null 
-                    ? `<span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-extrabold rounded-full">🏆 Note : ${reponse.note}/20</span>`
-                    : `<span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">⏳ En attente de notation</span>`}
+              <div class="space-y-4">
+                <!-- Copie de l'élève -->
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                      <i class="fa-solid fa-file-pen text-blue-600"></i> Votre copie soumise :
+                    </span>
+                    <span class="text-[11px] text-slate-400">${new Date(reponse.date_reponse || Date.now()).toLocaleString('fr-FR')}</span>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-800 bg-white p-4 rounded-xl border border-slate-200 whitespace-pre-wrap font-mono leading-relaxed">${sanitize(reponse.reponse)}</p>
+                  <div class="text-right pt-1">
+                    <a href="/repondre_questions.php?evaluation_id=${evalItem.id}" class="text-xs text-blue-600 hover:underline font-bold inline-flex items-center gap-1">
+                      <i class="fa-solid fa-pencil"></i>
+                      <span>Modifier ma réponse</span>
+                    </a>
+                  </div>
                 </div>
-                <p class="text-xs text-slate-700 bg-white p-3.5 rounded-xl border border-slate-200 whitespace-pre-wrap">${sanitize(reponse.reponse)}</p>
-                <div class="text-right">
-                  <a href="/repondre_questions.php?evaluation_id=${evalItem.id}" class="text-xs text-blue-600 hover:underline font-bold">
-                    Modifier ma réponse →
-                  </a>
-                </div>
+
+                <!-- Rapport de correction IA & Enseignant -->
+                ${isGraded ? `
+                  <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-50/70 via-indigo-50/50 to-white border border-blue-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-blue-500/20">
+                          ✨
+                        </div>
+                        <div>
+                          <h4 class="font-black text-slate-900 text-sm">Rapport de Correction & Notation</h4>
+                          <p class="text-[11px] text-slate-500">Évalué par l'IA Pédagogique UPSKILL & Validé par l'Administration</p>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-2xl font-black ${
+                          reponse.note >= 14 ? 'text-emerald-600' :
+                          reponse.note >= 10 ? 'text-blue-600' : 'text-amber-600'
+                        }">${reponse.note} <span class="text-sm font-bold text-slate-400">/ 20</span></span>
+                      </div>
+                    </div>
+
+                    ${reponse.appreciation ? `
+                      <div class="p-3.5 bg-white rounded-xl border border-blue-100 text-xs text-slate-800 leading-relaxed font-semibold">
+                        <span class="text-blue-600 font-bold block mb-0.5">💬 Appréciation générale :</span>
+                        ${sanitize(reponse.appreciation)}
+                      </div>
+                    ` : ''}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      ${reponse.points_forts && reponse.points_forts.length > 0 ? `
+                        <div class="p-3.5 bg-emerald-50/80 rounded-xl border border-emerald-200/80 space-y-1.5">
+                          <strong class="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i> Points forts :
+                          </strong>
+                          <ul class="text-xs text-emerald-900 space-y-1 pl-4 list-disc">
+                            ${(Array.isArray(reponse.points_forts) ? reponse.points_forts : [reponse.points_forts]).map(pf => `<li>${sanitize(pf)}</li>`).join('')}
+                          </ul>
+                        </div>
+                      ` : ''}
+
+                      ${reponse.axes_amelioration && reponse.axes_amelioration.length > 0 ? `
+                        <div class="p-3.5 bg-amber-50/80 rounded-xl border border-amber-200/80 space-y-1.5">
+                          <strong class="text-xs font-bold text-amber-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb text-amber-600"></i> Conseils pour progresser :
+                          </strong>
+                          <ul class="text-xs text-amber-900 space-y-1 pl-4 list-disc">
+                            ${(Array.isArray(reponse.axes_amelioration) ? reponse.axes_amelioration : [reponse.axes_amelioration]).map(ax => `<li>${sanitize(ax)}</li>`).join('')}
+                          </ul>
+                        </div>
+                      ` : ''}
+                    </div>
+
+                    ${reponse.correction_detaillee ? `
+                      <details class="group bg-white rounded-xl border border-slate-200 overflow-hidden">
+                        <summary class="p-3.5 text-xs font-bold text-slate-800 cursor-pointer select-none hover:bg-slate-50 flex items-center justify-between">
+                          <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-book-open text-blue-600"></i>
+                            <span>Voir le corrigé détaillé étape par étape</span>
+                          </span>
+                          <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i>
+                        </summary>
+                        <div class="p-4 border-t border-slate-100 text-xs text-slate-700 whitespace-pre-wrap leading-relaxed font-mono bg-slate-50/50">
+                          ${sanitize(reponse.correction_detaillee)}
+                        </div>
+                      </details>
+                    ` : ''}
+                  </div>
+                ` : ''}
               </div>
             ` : `
-              <div class="pt-2">
-                <a href="/repondre_questions.php?evaluation_id=${evalItem.id}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+              <div class="pt-2 flex items-center justify-between">
+                <span class="text-xs text-slate-500">Durée recommandée : 45 min • Barème : 20 points</span>
+                <a href="/repondre_questions.php?evaluation_id=${evalItem.id}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 transition">
                   <i class="fa-solid fa-pen-nib"></i>
-                  <span>Rédiger et soumettre ma réponse</span>
+                  <span>Rédiger et soumettre ma copie</span>
                 </a>
               </div>
             `}
@@ -1886,7 +2001,7 @@ app.get(['/repondre_evaluation.php', '/coursevaluation.php'], (req, res) => {
   </div>
   `;
 
-  res.send(wrapHtml({ title: 'Évaluations', activeTab: 'evaluations', req, content: html }));
+  res.send(wrapHtml({ title: 'Évaluations & Devoirs', activeTab: 'evaluations', req, content: html }));
 });
 
 app.get(['/repondre_questions.php', '/repondre_questions'], (req, res) => {
@@ -1915,21 +2030,32 @@ app.get(['/repondre_questions.php', '/repondre_questions'], (req, res) => {
         <h1 class="text-2xl font-extrabold text-slate-900">${sanitize(evaluation.titre)}</h1>
       </div>
 
-      <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-sm text-slate-700 leading-relaxed">
-        <strong class="text-slate-900 block mb-1">Consignes de l'évaluation :</strong>
+      <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-sm text-slate-700 leading-relaxed font-mono whitespace-pre-wrap">
+        <strong class="text-slate-900 block mb-1 font-sans">Consignes de l'évaluation :</strong>
         ${sanitize(evaluation.description)}
       </div>
 
       <form method="POST" action="/repondre_questions.php" class="space-y-4">
         <input type="hidden" name="evaluation_id" value="${evaluation.id}">
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Rédigez votre réponse ou code :</label>
-          <textarea name="reponse" rows="8" required placeholder="Tapez votre solution détaillée ici..."
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Rédigez votre réponse ou code :</label>
+            <span class="text-[11px] text-slate-400">Correction et notation automatique assistée par IA</span>
+          </div>
+          <textarea name="reponse" rows="10" required placeholder="Tapez votre solution détaillée ici (démonstration, algorithme, calculs étape par étape)..."
             class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:bg-white focus:border-blue-500 outline-none font-mono leading-relaxed">${existingReponse ? sanitize(existingReponse.reponse) : ''}</textarea>
         </div>
 
-        <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition">
-          Soumettre ma copie pour correction 🚀
+        <div class="p-4 rounded-2xl bg-blue-50/60 border border-blue-100 flex items-center gap-3">
+          <i class="fa-solid fa-sparkles text-blue-600 text-xl"></i>
+          <p class="text-xs text-blue-800 leading-relaxed">
+            Une fois votre copie soumise, le moteur d'évaluation IA analysera votre raisonnement, calculera une note sur 20 et vous fournira des conseils pédagogiques personnalisés !
+          </p>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Soumettre ma copie pour correction</span>
         </button>
       </form>
     </div>
@@ -1949,18 +2075,48 @@ app.post(['/repondre_questions.php', '/soumettre_exercice.php'], async (req, res
   const reponseText = (req.body.reponse || '').trim();
 
   if (evalId && reponseText) {
-    await dbService.submitReponse({
+    const user = db.users.find(u => u.id === user_id);
+    const evaluation = db.evaluations.find(e => e.id === evalId);
+
+    // Save student response
+    const rep = await dbService.submitReponse({
       utilisateur_id: user_id,
       evaluation_id: evalId,
       reponse: reponseText
     });
+
+    // Run AI grading immediately so results are ready for the student and admin!
+    if (evaluation) {
+      try {
+        const aiCorrection = await gradeStudentSubmission({
+          evaluationTitre: evaluation.titre,
+          evaluationDescription: evaluation.description,
+          studentReponse: reponseText,
+          studentNom: user?.nom || 'Élève',
+          studentClasse: user?.classe || 'Secondaire'
+        });
+
+        await dbService.saveCorrectionAI({
+          reponseId: rep.id,
+          note: aiCorrection.note,
+          appreciation: aiCorrection.appreciation,
+          points_forts: aiCorrection.points_forts,
+          axes_amelioration: aiCorrection.axes_amelioration,
+          correction_detaillee: aiCorrection.correction_detaillee,
+          bareme: aiCorrection.bareme,
+          statut_correction: 'corrige_ia'
+        });
+      } catch (err) {
+        console.error('Erreur correction automatique IA lors de la soumission:', err.message);
+      }
+    }
   }
 
   res.redirect('/repondre_evaluation.php');
 });
 
 // =========================================================================
-// REAL-TIME MESSAGING (STUDENT ↔ TEACHER / PEDAGOGICAL TEAM)
+// REAL-TIME MESSAGING WITH AI PEDAGOGICAL TUTOR (GEMINI 3.7 FLASH)
 // =========================================================================
 app.get(['/messagerie_utilisateurs.php', '/conversation.php'], (req, res) => {
   if (!req.session || !req.session.user_id) {
@@ -1968,63 +2124,134 @@ app.get(['/messagerie_utilisateurs.php', '/conversation.php'], (req, res) => {
   }
 
   const user_id = req.session.user_id;
+  const user = db.users.find(u => u.id === user_id);
   const messages = db.messages.filter(m => 
     (m.expediteur_id === user_id && m.destinataire_id === 1) ||
     (m.expediteur_id === 1 && m.destinataire_id === user_id)
   );
 
   const html = `
-  <div class="max-w-4xl mx-auto">
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-[700px]">
-      <!-- Chat Header -->
-      <div class="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between">
+  <div class="max-w-4xl mx-auto space-y-4">
+    <!-- Quick prompt recommendations -->
+    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-5 text-white shadow-lg space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-lg">
+          <div class="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-xl">
+            ✨
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base">Tuteur Pédagogique Intelligent UPSKILL IA</h3>
+            <p class="text-xs text-blue-100">Posez vos questions sur les cours, formules, algorithmes et devoirs 24h/24</p>
+          </div>
+        </div>
+        <span class="px-3 py-1 bg-emerald-400/20 text-emerald-200 border border-emerald-400/30 rounded-full font-bold text-xs flex items-center gap-1.5 w-fit">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          IA Active (Gemini)
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <span class="font-bold text-blue-200 whitespace-nowrap">Idées de questions :</span>
+        <button onclick="fillMessage('Explique-moi pas à pas le théorème de Pythagore avec un exemple numérique')" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl whitespace-nowrap transition">
+          📐 Théorème de Pythagore
+        </button>
+        <button onclick="fillMessage('Comment fonctionne une boucle Pour en algorithmique et en Python ?')" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl whitespace-nowrap transition">
+          💻 Boucles Algorithmiques
+        </button>
+        <button onclick="fillMessage('Donne-moi une méthode pour résoudre une équation du 2nd degré ax²+bx+c=0')" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl whitespace-nowrap transition">
+          🔢 Équations 2nd degré
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-[650px]">
+      <!-- Chat Header -->
+      <div class="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center font-bold text-white text-lg shadow-md shadow-blue-500/30">
             👨‍🏫
           </div>
           <div>
-            <h2 class="font-bold text-sm sm:text-base text-white">Équipe Pédagogique UPSKILL</h2>
+            <div class="flex items-center gap-2">
+              <h2 class="font-bold text-sm sm:text-base text-white">Tuteur Virtuel & Équipe Enseignante</h2>
+              <span class="px-2 py-0.5 bg-blue-500/20 text-blue-300 font-extrabold text-[10px] rounded-full border border-blue-400/30">
+                IA & Enseignant
+              </span>
+            </div>
             <div class="flex items-center gap-1.5 text-xs text-emerald-400">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>En ligne pour répondre à vos questions</span>
+              <span>Réponses instantanées et détaillées</span>
             </div>
           </div>
+        </div>
+
+        <div class="text-xs text-slate-400 hidden sm:block">
+          Apprenant : <strong class="text-white">${sanitize(user?.nom || 'Élève')}</strong>
         </div>
       </div>
 
       <!-- Messages Thread -->
-      <div class="flex-1 p-6 overflow-y-auto bg-slate-100/70 space-y-4" id="chat-thread">
+      <div class="flex-1 p-6 overflow-y-auto bg-slate-50 space-y-4" id="chat-thread">
+        ${messages.length === 0 ? `
+          <div class="text-center py-12 space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl mx-auto shadow-inner">
+              💡
+            </div>
+            <h4 class="font-extrabold text-slate-800 text-sm">Bienvenue dans votre espace d'échange !</h4>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+              Posez n'importe quelle question sur vos cours ou collez l'énoncé d'un exercice. Notre IA pédagogique vous répondra immédiatement.
+            </p>
+          </div>
+        ` : ''}
+
         ${messages.map(m => {
           const isMe = m.expediteur_id === user_id && !m.isAdminSender;
           return `
             <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-              <div class="max-w-[80%] sm:max-w-[65%] rounded-2xl p-4 shadow-sm text-xs sm:text-sm ${
-                isMe ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white text-slate-800 rounded-tl-none border border-slate-200'
+              <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 shadow-sm text-xs sm:text-sm ${
+                isMe 
+                  ? 'bg-blue-600 text-white rounded-tr-none' 
+                  : 'bg-white text-slate-800 rounded-tl-none border border-slate-200'
               }">
-                <span class="font-bold block text-[11px] mb-1 opacity-80">${isMe ? 'Vous' : 'Enseignant référent'}</span>
-                <p class="leading-relaxed whitespace-pre-wrap">${sanitize(m.contenu)}</p>
-                ${m.image ? `<img src="${escapeAttr(m.image)}" class="mt-2 rounded-xl max-h-48 object-cover border border-white/20">` : ''}
-                <span class="block text-[10px] text-right mt-1.5 opacity-70">
-                  ${new Date(m.date_envoi).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class="font-bold text-[11px] ${isMe ? 'text-blue-100' : 'text-blue-600'}">
+                    ${isMe ? 'Vous' : '🤖 Tuteur Pédagogique IA (UPSKILL)'}
+                  </span>
+                  ${!isMe ? '<span class="px-1.5 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-extrabold rounded">IA Gemini</span>' : ''}
+                </div>
+                <div class="leading-relaxed whitespace-pre-wrap font-sans">${sanitize(m.contenu)}</div>
+                ${m.image ? `<img src="${escapeAttr(m.image)}" class="mt-2.5 rounded-xl max-h-56 object-cover border border-slate-200">` : ''}
+                <span class="block text-[10px] text-right mt-2 opacity-60">
+                  ${new Date(m.date_envoi || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
             </div>
           `;
         }).join('')}
+        
+        <div id="ai-typing-indicator" class="hidden flex flex-col items-start">
+          <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-3.5 text-xs text-slate-600 flex items-center gap-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-blue-600 animate-bounce"></span>
+            <span class="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style="animation-delay: 0.2s"></span>
+            <span class="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style="animation-delay: 0.4s"></span>
+            <span class="font-semibold text-blue-600 ml-1">L'IA prépare votre explication pédagogique...</span>
+          </div>
+        </div>
       </div>
 
       <!-- Message Form Input -->
       <div class="p-4 bg-white border-t border-slate-200">
-        <form method="POST" action="/messagerie_utilisateurs.php" enctype="multipart/form-data" class="flex items-center gap-3">
-          <label class="p-3 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-xl cursor-pointer transition" title="Joindre une photo">
+        <form method="POST" action="/messagerie_utilisateurs.php" enctype="multipart/form-data" id="chat-form" class="flex items-center gap-3">
+          <label class="p-3 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-xl cursor-pointer transition" title="Joindre une photo d'exercice">
             <i class="fa-solid fa-paperclip text-lg"></i>
-            <input type="file" name="image" accept="image/*" class="hidden">
+            <input type="file" name="image" id="image-input" accept="image/*" class="hidden">
           </label>
 
-          <input type="text" name="contenu" placeholder="Posez votre question sur un cours ou exercice..." required autofocus
-            class="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 outline-none">
+          <input type="text" name="contenu" id="message-input" placeholder="Posez une question sur un cours, exercice, ou formule..." required autofocus
+            class="flex-1 px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 outline-none">
 
-          <button type="submit" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md transition flex items-center gap-2">
+          <button type="submit" id="send-btn" class="px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md shadow-blue-500/25 transition flex items-center gap-2">
             <span>Envoyer</span>
             <i class="fa-solid fa-paper-plane text-xs"></i>
           </button>
@@ -2036,10 +2263,29 @@ app.get(['/messagerie_utilisateurs.php', '/conversation.php'], (req, res) => {
   <script>
     const thread = document.getElementById('chat-thread');
     if (thread) thread.scrollTop = thread.scrollHeight;
+
+    function fillMessage(text) {
+      const input = document.getElementById('message-input');
+      if (input) {
+        input.value = text;
+        input.focus();
+      }
+    }
+
+    const chatForm = document.getElementById('chat-form');
+    if (chatForm) {
+      chatForm.addEventListener('submit', () => {
+        const typing = document.getElementById('ai-typing-indicator');
+        if (typing) {
+          typing.classList.remove('hidden');
+          if (thread) thread.scrollTop = thread.scrollHeight;
+        }
+      });
+    }
   </script>
   `;
 
-  res.send(wrapHtml({ title: 'Messagerie Enseignant', activeTab: 'messages', req, content: html }));
+  res.send(wrapHtml({ title: 'Messagerie & Tuteur IA', activeTab: 'messages', req, content: html }));
 });
 
 app.post('/messagerie_utilisateurs.php', upload.single('image'), async (req, res) => {
@@ -2048,28 +2294,56 @@ app.post('/messagerie_utilisateurs.php', upload.single('image'), async (req, res
   }
 
   const user_id = req.session.user_id;
+  const user = db.users.find(u => u.id === user_id);
   const contenu = (req.body.contenu || '').trim();
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
   if (contenu || imagePath) {
+    // 1. Save student message
     await dbService.sendMessage({
       expediteur_id: user_id,
       destinataire_id: 1,
       isAdminSender: 0,
-      contenu: contenu || 'Fichier joint',
+      contenu: contenu || 'Photo ou document joint',
       image: imagePath
     });
 
-    // Pedagogic team response acknowledgment
-    setTimeout(async () => {
-      await dbService.sendMessage({
-        expediteur_id: 1,
-        destinataire_id: user_id,
-        isAdminSender: 1,
-        contenu: "Bien reçu ! Votre question a été transmise à votre enseignant référent. Une correction détaillée vous parviendra sous peu.",
-        image: null
-      });
-    }, 1000);
+    // 2. Prepare image data for Gemini multimodal if provided
+    let imageBase64 = null;
+    let imageMimeType = null;
+    if (req.file && fs.existsSync(req.file.path)) {
+      try {
+        const fileBuffer = fs.readFileSync(req.file.path);
+        imageBase64 = fileBuffer.toString('base64');
+        imageMimeType = req.file.mimetype;
+      } catch (e) {
+        console.error('Erreur lecture image uploadée:', e.message);
+      }
+    }
+
+    // 3. Get recent conversation history
+    const recentMessages = db.messages
+      .filter(m => (m.expediteur_id === user_id && m.destinataire_id === 1) || (m.expediteur_id === 1 && m.destinataire_id === user_id))
+      .slice(-6);
+
+    // 4. Generate AI Tutor Response using Gemini 3.7 Flash
+    const aiResponseText = await answerStudentMessage({
+      contenu: contenu || "Pouvez-vous m'expliquer ce document / cet exercice ?",
+      userNom: user?.nom || 'Élève',
+      userClasse: user?.classe || 'Secondaire',
+      imageBase64,
+      imageMimeType,
+      history: recentMessages
+    });
+
+    // 5. Save AI Tutor Response
+    await dbService.sendMessage({
+      expediteur_id: 1,
+      destinataire_id: user_id,
+      isAdminSender: 1,
+      contenu: aiResponseText,
+      image: null
+    });
   }
 
   res.redirect('/messagerie_utilisateurs.php');
@@ -2327,6 +2601,71 @@ app.get(['/admin_logout.php', '/admin_logout', '/admin/logout'], (req, res) => {
   res.redirect('/admin_login.php?success=' + encodeURIComponent("Vous avez été déconnecté du portail d'administration avec succès."));
 });
 
+// Admin Sidebar Component Helper
+function renderAdminSidebar(active = 'dashboard') {
+  const pendingCount = db.reponses.filter(r => r.note === null || r.note === undefined).length;
+  
+  return `
+  <aside class="w-64 bg-slate-900 text-slate-300 p-6 flex flex-col justify-between hidden md:flex min-h-screen shrink-0">
+    <div class="space-y-8">
+      <div class="flex items-center gap-3 text-white font-extrabold text-xl">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">U</div>
+        <span>UPSKILL Admin</span>
+      </div>
+
+      <nav class="space-y-1.5 text-xs font-semibold">
+        <a href="/admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+          active === 'dashboard' ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+        }">
+          <i class="fa-solid fa-chart-pie text-sm"></i>
+          <span>Tableau de bord</span>
+        </a>
+
+        <a href="/admin_evaluations.php" class="flex items-center justify-between px-4 py-3 rounded-xl transition ${
+          active === 'evaluations' ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+        }">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-wand-magic-sparkles text-sm text-indigo-400"></i>
+            <span>Évaluations & IA</span>
+          </div>
+          ${pendingCount > 0 ? `
+            <span class="px-2 py-0.5 bg-amber-500 text-slate-950 font-black text-[10px] rounded-full animate-pulse">
+              ${pendingCount}
+            </span>
+          ` : ''}
+        </a>
+
+        <a href="/admin_ajouter_epreuve.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+          active === 'epreuves' ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+        }">
+          <i class="fa-solid fa-file-circle-plus text-sm"></i>
+          <span>Ajouter une épreuve</span>
+        </a>
+
+        <a href="/liste_utilisateurs.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+          active === 'utilisateurs' ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+        }">
+          <i class="fa-solid fa-users text-sm"></i>
+          <span>Liste des apprenants</span>
+        </a>
+
+        <div class="pt-4 border-t border-slate-800/80 my-2"></div>
+
+        <a href="/Accueil.html" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          <span>Voir le site public</span>
+        </a>
+      </nav>
+    </div>
+
+    <a href="/admin_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-950/60 hover:bg-red-900 text-red-300 font-bold text-xs transition">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      <span>Déconnexion</span>
+    </a>
+  </aside>
+  `;
+}
+
 app.get(['/admin_dashboard.php', '/admin_dashboard', '/dashboard.php'], (req, res) => {
   if (!req.session || !req.session.admin_id) {
     return res.redirect('/admin_login.php');
@@ -2342,7 +2681,9 @@ app.get(['/admin_dashboard.php', '/admin_dashboard', '/dashboard.php'], (req, re
   const totalUsers = db.users.length;
   const totalAbonnements = db.abonnements.filter(a => a.statut_paiement === 'succes').length;
   const totalEpreuves = db.epreuves.length;
-  const totalMessages = db.messages.length;
+  const totalEvaluations = db.evaluations.length;
+  const totalReponses = db.reponses.length;
+  const pendingReponses = db.reponses.filter(r => r.note === null || r.note === undefined).length;
 
   res.send(`
 <!DOCTYPE html>
@@ -2358,51 +2699,25 @@ app.get(['/admin_dashboard.php', '/admin_dashboard', '/dashboard.php'], (req, re
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex">
 
-  <!-- Admin Sidebar -->
-  <aside class="w-64 bg-slate-900 text-slate-300 p-6 flex flex-col justify-between hidden md:flex min-h-screen">
-    <div class="space-y-8">
-      <div class="flex items-center gap-3 text-white font-extrabold text-xl">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white">U</div>
-        <span>UPSKILL Admin</span>
-      </div>
-
-      <nav class="space-y-1">
-        <a href="/admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white font-bold text-sm">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span>Tableau de bord</span>
-        </a>
-        <a href="/admin_ajouter_epreuve.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-semibold text-sm transition">
-          <i class="fa-solid fa-file-circle-plus"></i>
-          <span>Ajouter une épreuve</span>
-        </a>
-        <a href="/liste_utilisateurs.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-semibold text-sm transition">
-          <i class="fa-solid fa-users"></i>
-          <span>Liste des apprenants</span>
-        </a>
-        <a href="/Accueil.html" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 font-semibold text-sm transition">
-          <i class="fa-solid fa-globe"></i>
-          <span>Voir le site public</span>
-        </a>
-      </nav>
-    </div>
-
-    <a href="/admin_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-950/60 hover:bg-red-900 text-red-300 font-bold text-sm transition">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      <span>Déconnexion</span>
-    </a>
-  </aside>
+  ${renderAdminSidebar('dashboard')}
 
   <!-- Admin Main -->
   <main class="flex-1 p-6 sm:p-10 space-y-8 overflow-y-auto">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 font-extrabold text-xs rounded-full mb-2">
+          <i class="fa-solid fa-shield-check"></i> Espace Pédagogique & Direction
+        </div>
         <h1 class="text-3xl font-extrabold text-slate-900">Tableau de bord Général</h1>
-        <p class="text-sm text-slate-500">Supervision des effectifs, revenus Mobile Money et ressources pédagogiques</p>
+        <p class="text-sm text-slate-500">Supervision des effectifs, corrections automatiques IA et devoirs élèves</p>
       </div>
-      <a href="/admin_ajouter_epreuve.php" class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center gap-2">
-        <i class="fa-solid fa-plus"></i>
-        <span>Déposer une Épreuve</span>
-      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="/admin_evaluations.php" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Corrections IA (${pendingReponses} en attente)</span>
+        </a>
+      </div>
     </div>
 
     <!-- KPIs -->
@@ -2416,17 +2731,73 @@ app.get(['/admin_dashboard.php', '/admin_dashboard', '/dashboard.php'], (req, re
         <div class="text-3xl font-black text-emerald-600">${totalAbonnements}</div>
       </div>
       <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Épreuves Disponibles</span>
-        <div class="text-3xl font-black text-blue-600">${totalEpreuves}</div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Copies Soumises</span>
+        <div class="text-3xl font-black text-indigo-600">${totalReponses}</div>
       </div>
       <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Messages Échangés</span>
-        <div class="text-3xl font-black text-purple-600">${totalMessages}</div>
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-600">En attente de notation</span>
+        <div class="text-3xl font-black text-amber-600">${pendingReponses}</div>
+      </div>
+    </div>
+
+    <!-- AI Evaluation Highlight Banner -->
+    <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2 max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 rounded-full text-xs font-black">
+          <i class="fa-solid fa-sparkles"></i> Intelligence Artificielle Correctrice (Gemini 3.7 Flash)
+        </div>
+        <h2 class="text-2xl font-black text-white">Correction automatique des devoirs & attribution des notes</h2>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          L'IA analyse le raisonnement mathématique et le code des élèves, génère une note sur 20 argumentée, relève les points forts et propose des axes d'amélioration. Vous pouvez ensuite valider ou ajuster la note en 1 clic.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+        <a href="/admin_evaluations.php" class="px-6 py-3.5 bg-white text-slate-900 hover:bg-slate-100 font-extrabold text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-bolt text-indigo-600"></i>
+          <span>Accéder aux corrections IA</span>
+        </a>
       </div>
     </div>
 
     <!-- Tables Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Recent Student Submissions -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-slate-900 text-base">Dernières Copies Rendues par les Élèves</h3>
+          <a href="/admin_evaluations.php" class="text-xs font-bold text-blue-600 hover:underline">Gérer tout →</a>
+        </div>
+        <div class="divide-y divide-slate-100 text-xs">
+          ${db.reponses.length === 0 ? '<p class="py-4 text-slate-400 text-center">Aucune copie rendue pour le moment.</p>' : ''}
+          ${db.reponses.slice(-5).reverse().map(r => {
+            const student = db.users.find(u => u.id === r.utilisateur_id);
+            const evalItem = db.evaluations.find(e => e.id === r.evaluation_id);
+            return `
+              <div class="py-3.5 flex items-center justify-between gap-3">
+                <div>
+                  <strong class="text-slate-900 block">${sanitize(student?.nom || 'Élève #' + r.utilisateur_id)}</strong>
+                  <span class="text-slate-500">${sanitize(evalItem?.titre || 'Devoir #' + r.evaluation_id)}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  ${r.note !== null && r.note !== undefined ? `
+                    <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-extrabold rounded-full">
+                      ${r.note}/20
+                    </span>
+                  ` : `
+                    <span class="px-2.5 py-1 bg-amber-100 text-amber-800 font-bold rounded-full">
+                      En attente
+                    </span>
+                  `}
+                  <a href="/admin_corriger.php?reponse_id=${r.id}" class="px-3 py-1 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white font-bold rounded-lg transition">
+                    Examiner
+                  </a>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
       <!-- Recent Users -->
       <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
         <div class="flex items-center justify-between">
@@ -2440,36 +2811,14 @@ app.get(['/admin_dashboard.php', '/admin_dashboard', '/dashboard.php'], (req, re
               <div class="py-3 flex items-center justify-between gap-2">
                 <div>
                   <strong class="text-slate-900 block">${sanitize(u.nom)}</strong>
-                  <span class="text-slate-500">${sanitize(u.email)}</span>
+                  <span class="text-slate-500">${sanitize(u.email)} • Classe: ${sanitize(u.classe || '3ème')}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   ${ab ? `<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold">Actif (${sanitize(ab.plan)})</span>` : `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-semibold">Gratuit</span>`}
-                  <a href="/admin_dashboard.php?action=delete_user&id=${u.id}" onclick="return confirm('Supprimer cet apprenant ?');" class="p-1.5 text-slate-400 hover:text-red-600">
-                    <i class="fa-solid fa-trash"></i>
-                  </a>
                 </div>
               </div>
             `;
           }).join('')}
-        </div>
-      </div>
-
-      <!-- Recent Epreuves -->
-      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="font-bold text-slate-900 text-base">Dernières Épreuves Déposées</h3>
-          <a href="/admin_ajouter_epreuve.php" class="text-xs font-bold text-blue-600 hover:underline">+ Ajouter →</a>
-        </div>
-        <div class="divide-y divide-slate-100 text-xs">
-          ${db.epreuves.slice(-5).reverse().map(ep => `
-            <div class="py-3 flex items-center justify-between gap-2">
-              <div>
-                <strong class="text-slate-900 block truncate max-w-xs">${sanitize(ep.titre)}</strong>
-                <span class="text-slate-500">${sanitize(ep.niveau)} • ${sanitize(ep.matiere)}</span>
-              </div>
-              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 font-bold rounded-full">PDF</span>
-            </div>
-          `).join('')}
         </div>
       </div>
     </div>
@@ -2477,6 +2826,663 @@ app.get(['/admin_dashboard.php', '/admin_dashboard', '/dashboard.php'], (req, re
 </body>
 </html>
   `);
+});
+
+// =========================================================================
+// ADMIN EVALUATIONS MANAGEMENT & AI GRADING STUDIO
+// =========================================================================
+app.get(['/admin_evaluations.php', '/admin_evaluations'], (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const msg = req.query.msg || '';
+  const msgType = req.query.type || 'success';
+
+  const evaluations = db.evaluations;
+  const reponses = db.reponses;
+
+  res.send(`
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Évaluations & Corrections IA - Admin UPSKILL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex">
+
+  ${renderAdminSidebar('evaluations')}
+
+  <main class="flex-1 p-6 sm:p-10 space-y-8 overflow-y-auto">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 text-indigo-800 font-extrabold text-xs rounded-full mb-1">
+          <i class="fa-solid fa-robot"></i> Module d'Évaluation & IA Gemini
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-900">Évaluations & Corrections par l'IA</h1>
+        <p class="text-sm text-slate-500">Génération de sujets, correction automatisée des copies et attribution des notes aux élèves</p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="document.getElementById('ai-modal').classList.remove('hidden')" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Générer un sujet avec l'IA</span>
+        </button>
+
+        <button onclick="document.getElementById('manual-modal').classList.remove('hidden')" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition">
+          <i class="fa-solid fa-plus"></i>
+          <span>Créer un devoir manuel</span>
+        </button>
+
+        <form method="POST" action="/admin_corriger_toutes_ia.php" onsubmit="return confirm('Lancer la correction par IA pour toutes les copies en attente ?');">
+          <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Tout corriger par l'IA</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    ${msg ? `
+      <div class="p-4 rounded-2xl ${msgType === 'error' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-emerald-50 border-emerald-200 text-emerald-700'} border text-xs font-semibold flex items-center justify-between">
+        <span>${sanitize(msg)}</span>
+        <a href="/admin_evaluations.php" class="font-bold underline text-xs">✕</a>
+      </div>
+    ` : ''}
+
+    <!-- SECTION 1: COPIES DES ELEVES -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900">Copies d'Élèves & Notations (${reponses.length})</h2>
+          <p class="text-xs text-slate-500">Consultez les copies soumises, déclenchez l'IA pour corriger et attribuer une note</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 uppercase font-bold tracking-wider">
+            <tr>
+              <th class="p-3.5">Élève & Classe</th>
+              <th class="p-3.5">Évaluation / Devoir</th>
+              <th class="p-3.5">Date de Remise</th>
+              <th class="p-3.5">Statut Correction</th>
+              <th class="p-3.5">Note Attribuée</th>
+              <th class="p-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            ${reponses.length === 0 ? `
+              <tr>
+                <td colspan="6" class="p-8 text-center text-slate-400">
+                  <i class="fa-solid fa-clipboard-question text-3xl mb-2 block"></i>
+                  Aucune copie d'élève n'a encore été soumise.
+                </td>
+              </tr>
+            ` : ''}
+
+            ${reponses.map(r => {
+              const student = db.users.find(u => u.id === r.utilisateur_id);
+              const evalItem = db.evaluations.find(e => e.id === r.evaluation_id);
+              const isGraded = r.note !== null && r.note !== undefined;
+              
+              return `
+                <tr class="hover:bg-slate-50/60 transition">
+                  <td class="p-3.5">
+                    <strong class="text-slate-900 block font-bold">${sanitize(student?.nom || 'Élève #' + r.utilisateur_id)}</strong>
+                    <span class="text-slate-500 text-[11px]">${sanitize(student?.email || '')} • Classe: ${sanitize(student?.classe || '3ème')}</span>
+                  </td>
+
+                  <td class="p-3.5 font-semibold text-slate-800 max-w-xs truncate">
+                    ${sanitize(evalItem?.titre || 'Évaluation #' + r.evaluation_id)}
+                  </td>
+
+                  <td class="p-3.5 text-slate-500 whitespace-nowrap">
+                    ${new Date(r.date_reponse || Date.now()).toLocaleDateString('fr-FR')} ${new Date(r.date_reponse || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                  </td>
+
+                  <td class="p-3.5 whitespace-nowrap">
+                    ${r.statut_correction === 'valide_admin' ? `
+                      <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full font-extrabold text-[11px] flex items-center gap-1 w-fit">
+                        <i class="fa-solid fa-circle-check"></i> Validé par Enseignant
+                      </span>
+                    ` : r.statut_correction === 'corrige_ia' ? `
+                      <span class="px-2.5 py-1 bg-indigo-100 text-indigo-800 rounded-full font-bold text-[11px] flex items-center gap-1 w-fit">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Corrigé par IA
+                      </span>
+                    ` : `
+                      <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-[11px] flex items-center gap-1 w-fit">
+                        <i class="fa-solid fa-clock"></i> En attente de notation
+                      </span>
+                    `}
+                  </td>
+
+                  <td class="p-3.5 whitespace-nowrap">
+                    ${isGraded ? `
+                      <span class="text-base font-black ${
+                        r.note >= 14 ? 'text-emerald-600' :
+                        r.note >= 10 ? 'text-blue-600' : 'text-amber-600'
+                      }">${r.note} <span class="text-xs text-slate-400">/ 20</span></span>
+                    ` : `
+                      <span class="text-slate-400 font-bold">-- / 20</span>
+                    `}
+                  </td>
+
+                  <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+                    <form method="POST" action="/admin_corriger_ia.php" class="inline">
+                      <input type="hidden" name="reponse_id" value="${r.id}">
+                      <button type="submit" title="Lancer l'analyse et correction automatique par l'IA" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-bold rounded-xl transition inline-flex items-center gap-1">
+                        <i class="fa-solid fa-robot text-xs"></i>
+                        <span>Corriger par IA</span>
+                      </button>
+                    </form>
+
+                    <a href="/admin_corriger.php?reponse_id=${r.id}" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition inline-flex items-center gap-1">
+                      <i class="fa-solid fa-pen-to-square text-xs"></i>
+                      <span>Examiner & Valider</span>
+                    </a>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 2: LISTE DES DEVOIRS CREES -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900">Sujets & Devoirs Actifs (${evaluations.length})</h2>
+          <p class="text-xs text-slate-500">Gérez les énoncés disponibles pour les élèves sur la plateforme</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        ${evaluations.map(ev => {
+          const countCopies = reponses.filter(r => r.evaluation_id === ev.id).length;
+          return `
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-extrabold rounded-full">Devoir #${ev.id}</span>
+                  <span class="text-[11px] text-slate-400">${new Date(ev.date_creation || Date.now()).toLocaleDateString('fr-FR')}</span>
+                </div>
+                <h3 class="font-bold text-slate-900 text-sm leading-snug">${sanitize(ev.titre)}</h3>
+                <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed font-mono whitespace-pre-wrap">${sanitize(ev.description)}</p>
+              </div>
+
+              <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 text-xs">
+                <span class="font-bold text-indigo-700 flex items-center gap-1.5">
+                  <i class="fa-solid fa-file-signature"></i>
+                  ${countCopies} copie(s) rendue(s)
+                </span>
+
+                <form method="POST" action="/admin_supprimer_evaluation.php" onsubmit="return confirm('Supprimer définitivement ce devoir ?');">
+                  <input type="hidden" name="evaluation_id" value="${ev.id}">
+                  <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 transition">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: GENERER SUJET IA -->
+  <div id="ai-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-sm">
+            ✨
+          </div>
+          <div>
+            <h3 class="font-black text-slate-900 text-base">Générer un Devoir avec l'IA</h3>
+            <p class="text-xs text-slate-500">Gemini concevra l'énoncé, les questions et le barème</p>
+          </div>
+        </div>
+        <button onclick="document.getElementById('ai-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
+      </div>
+
+      <form method="POST" action="/admin_generer_evaluation.php" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Niveau / Classe</label>
+            <select name="niveau" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-purple-600 outline-none">
+              <option value="Classe de 6ème">6ème</option>
+              <option value="Classe de 5ème">5ème</option>
+              <option value="Classe de 4ème">4ème</option>
+              <option value="Classe de 3ème (BEPC)" selected>3ème (BEPC)</option>
+              <option value="Classe de Seconde">Seconde</option>
+              <option value="Classe de Première">Première</option>
+              <option value="Classe de Terminale (BAC)">Terminale (BAC)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Matière</label>
+            <input type="text" name="matiere" value="Informatique & Algorithmique" required
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-purple-600 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Thème / Chapitre du cours</label>
+          <input type="text" name="theme" placeholder="Ex: Boucles Pour et Tant que, Théorème de Pythagore, SQL..." required
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-purple-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Niveau de difficulté</label>
+          <select name="difficulte" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-purple-600 outline-none">
+            <option value="Facile">Facile (Questions de cours et applications directes)</option>
+            <option value="Moyen" selected>Moyen (Cas pratiques et synthèse)</option>
+            <option value="Difficile / Type Examen">Difficile / Type Examen Officiel</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Générer et publier le devoir automatiquement</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREER MANUEL -->
+  <div id="manual-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-black text-slate-900 text-base">Créer une Évaluation Manuelle</h3>
+        <button onclick="document.getElementById('manual-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
+      </div>
+
+      <form method="POST" action="/admin_creer_evaluation.php" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Titre de l'évaluation</label>
+          <input type="text" name="titre" placeholder="Ex: Devoir de Synthèse : Programmation C" required
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-blue-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Énoncé complet & Consignes</label>
+          <textarea name="description" rows="6" placeholder="Rédigez l'énoncé complet, les questions et barème..." required
+            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-blue-600 outline-none font-mono"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+          Créer et mettre en ligne l'évaluation
+        </button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
+  `);
+});
+
+// ACTION: AI GRADE SINGLE SUBMISSION
+app.post('/admin_corriger_ia.php', async (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const reponseId = parseInt(req.body.reponse_id, 10);
+  const reponse = db.reponses.find(r => r.id === reponseId);
+
+  if (reponse) {
+    const student = db.users.find(u => u.id === reponse.utilisateur_id);
+    const evalItem = db.evaluations.find(e => e.id === reponse.evaluation_id);
+
+    try {
+      const aiResult = await gradeStudentSubmission({
+        evaluationTitre: evalItem?.titre || "Évaluation",
+        evaluationDescription: evalItem?.description || "",
+        studentReponse: reponse.reponse,
+        studentNom: student?.nom || "Élève",
+        studentClasse: student?.classe || "Secondaire"
+      });
+
+      await dbService.saveCorrectionAI({
+        reponseId: reponse.id,
+        note: aiResult.note,
+        appreciation: aiResult.appreciation,
+        points_forts: aiResult.points_forts,
+        axes_amelioration: aiResult.axes_amelioration,
+        correction_detaillee: aiResult.correction_detaillee,
+        bareme: aiResult.bareme,
+        statut_correction: 'corrige_ia'
+      });
+
+      return res.redirect(`/admin_corriger.php?reponse_id=${reponse.id}&msg=` + encodeURIComponent("Copie corrigée avec succès par l'IA ! Vous pouvez maintenant valider ou modifier la note."));
+    } catch (err) {
+      console.error("Erreur admin_corriger_ia:", err.message);
+    }
+  }
+
+  res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Correction effectuée."));
+});
+
+// ACTION: BATCH AI GRADE ALL PENDING SUBMISSIONS
+app.post('/admin_corriger_toutes_ia.php', async (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const pending = db.reponses.filter(r => r.note === null || r.note === undefined || r.statut_correction === 'en_attente');
+  let count = 0;
+
+  for (const rep of pending) {
+    const student = db.users.find(u => u.id === rep.utilisateur_id);
+    const evalItem = db.evaluations.find(e => e.id === rep.evaluation_id);
+
+    try {
+      const aiResult = await gradeStudentSubmission({
+        evaluationTitre: evalItem?.titre || "Évaluation",
+        evaluationDescription: evalItem?.description || "",
+        studentReponse: rep.reponse,
+        studentNom: student?.nom || "Élève",
+        studentClasse: student?.classe || "Secondaire"
+      });
+
+      await dbService.saveCorrectionAI({
+        reponseId: rep.id,
+        note: aiResult.note,
+        appreciation: aiResult.appreciation,
+        points_forts: aiResult.points_forts,
+        axes_amelioration: aiResult.axes_amelioration,
+        correction_detaillee: aiResult.correction_detaillee,
+        bareme: aiResult.bareme,
+        statut_correction: 'corrige_ia'
+      });
+      count++;
+    } catch (e) {
+      console.error("Erreur batch grading:", e.message);
+    }
+  }
+
+  res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent(`${count} copie(s) ont été corrigées et notées avec succès par l'IA !`));
+});
+
+// ACTION: GENERATE NEW EVALUATION USING AI
+app.post('/admin_generer_evaluation.php', async (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const { niveau, matiere, theme, difficulte } = req.body;
+  if (!theme) {
+    return res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Veuillez renseigner le thème du cours.") + '&type=error');
+  }
+
+  try {
+    const aiEval = await generateEvaluationAI({
+      niveau: niveau || 'Classe de 3ème',
+      matiere: matiere || 'Informatique',
+      theme,
+      difficulte: difficulte || 'Moyen'
+    });
+
+    await dbService.createEvaluation({
+      titre: aiEval.titre || `Évaluation ${matiere} : ${theme}`,
+      description: aiEval.description || "Consigne d'évaluation.",
+      corrige_type: aiEval.corrige_type || ""
+    });
+
+    res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Nouveau devoir généré par l'IA et publié avec succès !"));
+  } catch (err) {
+    console.error("Erreur admin_generer_evaluation:", err.message);
+    res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Erreur lors de la génération IA.") + '&type=error');
+  }
+});
+
+// ACTION: MANUAL EVALUATION CREATION
+app.post('/admin_creer_evaluation.php', async (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const titre = (req.body.titre || '').trim();
+  const description = (req.body.description || '').trim();
+
+  if (titre && description) {
+    await dbService.createEvaluation({
+      titre,
+      description
+    });
+    return res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Évaluation manuelle créée et mise en ligne avec succès !"));
+  }
+
+  res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Veuillez remplir tous les champs.") + '&type=error');
+});
+
+// ACTION: DELETE EVALUATION
+app.post('/admin_supprimer_evaluation.php', async (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const evalId = parseInt(req.body.evaluation_id, 10);
+  if (evalId) {
+    await dbService.deleteEvaluation(evalId);
+  }
+
+  res.redirect('/admin_evaluations.php?msg=' + encodeURIComponent("Évaluation supprimée avec succès."));
+});
+
+// =========================================================================
+// ADMIN SINGLE COPY CORRECTION & VALIDATION STUDIO
+// =========================================================================
+app.get(['/admin_corriger.php', '/admin_corriger'], (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const repId = parseInt(req.query.reponse_id, 10);
+  const reponse = db.reponses.find(r => r.id === repId);
+
+  if (!reponse) {
+    return res.redirect('/admin_evaluations.php');
+  }
+
+  const student = db.users.find(u => u.id === reponse.utilisateur_id);
+  const evalItem = db.evaluations.find(e => e.id === reponse.evaluation_id);
+  const msg = req.query.msg || '';
+
+  res.send(`
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correction de Copie - Admin UPSKILL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen p-4 sm:p-8">
+  <div class="max-w-6xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+      <a href="/admin_evaluations.php" class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition inline-flex items-center gap-1.5">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Retour aux évaluations</span>
+      </a>
+
+      <div class="flex items-center gap-2">
+        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full font-bold text-xs">
+          Copie #${reponse.id}
+        </span>
+      </div>
+    </div>
+
+    ${msg ? `
+      <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+        ${sanitize(msg)}
+      </div>
+    ` : ''}
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Left Column: Student Submission & Exam Subject -->
+      <div class="lg:col-span-6 space-y-6">
+        <!-- Student Info Header -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+              ${sanitize((student?.nom || 'E').charAt(0))}
+            </div>
+            <div>
+              <h2 class="font-extrabold text-slate-900 text-base">${sanitize(student?.nom || 'Apprenant')}</h2>
+              <p class="text-xs text-slate-500">${sanitize(student?.email || '')} • Classe : <strong class="text-slate-800">${sanitize(student?.classe || '3ème')}</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam Subject -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Énoncé du devoir :</span>
+          <h3 class="font-bold text-slate-900 text-sm">${sanitize(evalItem?.titre || 'Évaluation')}</h3>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-700 leading-relaxed font-mono whitespace-pre-wrap">${sanitize(evalItem?.description || '')}</div>
+        </div>
+
+        <!-- Student Answer -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Copie rendue par l'élève :</span>
+            <span class="text-[11px] text-slate-400">${new Date(reponse.date_reponse || Date.now()).toLocaleString('fr-FR')}</span>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs sm:text-sm text-slate-900 leading-relaxed font-mono whitespace-pre-wrap">${sanitize(reponse.reponse)}</div>
+        </div>
+      </div>
+
+      <!-- Right Column: AI Correction & Admin Scoring Editor -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
+                🤖
+              </div>
+              <div>
+                <h3 class="font-black text-slate-900 text-base">Notation & Rapport de Correction</h3>
+                <p class="text-xs text-slate-500">Validé et publié à l'élève dans son espace</p>
+              </div>
+            </div>
+
+            <form method="POST" action="/admin_corriger_ia.php">
+              <input type="hidden" name="reponse_id" value="${reponse.id}">
+              <button type="submit" class="px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-bold text-xs rounded-xl border border-indigo-200 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                <span>Re-corriger par IA</span>
+              </button>
+            </form>
+          </div>
+
+          <form method="POST" action="/admin_valider_note.php" class="space-y-4">
+            <input type="hidden" name="reponse_id" value="${reponse.id}">
+
+            <!-- Note / 20 -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                Note attribuée à la copie (sur 20) :
+              </label>
+              <div class="relative flex items-center">
+                <input type="number" step="0.5" min="0" max="20" name="note" required value="${reponse.note !== null && reponse.note !== undefined ? reponse.note : 15}"
+                  class="w-full text-2xl font-black text-blue-600 px-4 py-3 bg-blue-50/60 border border-blue-200 rounded-2xl focus:bg-white focus:border-blue-600 outline-none">
+                <span class="absolute right-4 text-sm font-bold text-slate-400">/ 20</span>
+              </div>
+            </div>
+
+            <!-- Appreciation -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                Appréciation générale :
+              </label>
+              <textarea name="appreciation" rows="2" required placeholder="Commentaire général sur la copie..."
+                class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-blue-600 outline-none leading-relaxed">${reponse.appreciation ? sanitize(reponse.appreciation) : "Bonne copie avec une démarche rigoureuse."}</textarea>
+            </div>
+
+            <!-- Points forts -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                Points forts de l'élève (séparés par des retours à la ligne) :
+              </label>
+              <textarea name="points_forts" rows="2" placeholder="Points forts relevés..."
+                class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-blue-600 outline-none leading-relaxed">${Array.isArray(reponse.points_forts) ? sanitize(reponse.points_forts.join('\n')) : sanitize(reponse.points_forts || 'Démarche structurée\nBonne maîtrise de la syntaxe')}</textarea>
+            </div>
+
+            <!-- Axes d'amélioration -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                Conseils & Axes d'amélioration :
+              </label>
+              <textarea name="axes_amelioration" rows="2" placeholder="Conseils pour progresser..."
+                class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-blue-600 outline-none leading-relaxed">${Array.isArray(reponse.axes_amelioration) ? sanitize(reponse.axes_amelioration.join('\n')) : sanitize(reponse.axes_amelioration || 'Soigner les justifications mathématiques')}</textarea>
+            </div>
+
+            <!-- Correction détaillée -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                Corrigé modèle détaillé & explications pas à pas :
+              </label>
+              <textarea name="correction_detaillee" rows="5" placeholder="Corrigé complet visible par l'élève..."
+                class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-blue-600 outline-none font-mono leading-relaxed">${reponse.correction_detaillee ? sanitize(reponse.correction_detaillee) : 'Corrigé type de référence.'}</textarea>
+            </div>
+
+            <div class="pt-2">
+              <button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Valider & Publier la Note à l'Élève</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `);
+});
+
+// ACTION: ADMIN VALIDATE & SAVE FINAL GRADE
+app.post('/admin_valider_note.php', async (req, res) => {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin_login.php');
+  }
+
+  const reponseId = parseInt(req.body.reponse_id, 10);
+  const note = parseFloat(req.body.note);
+  const appreciation = (req.body.appreciation || '').trim();
+  const points_forts = (req.body.points_forts || '').split('\n').map(s => s.trim()).filter(Boolean);
+  const axes_amelioration = (req.body.axes_amelioration || '').split('\n').map(s => s.trim()).filter(Boolean);
+  const correction_detaillee = (req.body.correction_detaillee || '').trim();
+
+  if (reponseId) {
+    await dbService.saveCorrectionAI({
+      reponseId,
+      note: isNaN(note) ? 14 : note,
+      appreciation,
+      points_forts,
+      axes_amelioration,
+      correction_detaillee,
+      bareme: "Validé par l'enseignant",
+      statut_correction: 'valide_admin'
+    });
+  }
+
+  res.redirect(`/admin_corriger.php?reponse_id=${reponseId}&msg=` + encodeURIComponent("Note validée et publiée avec succès ! L'élève peut dès maintenant voir sa note et correction dans son espace."));
 });
 
 app.get(['/admin_ajouter_epreuve.php', '/admin_ajouter_epreuve'], (req, res) => {

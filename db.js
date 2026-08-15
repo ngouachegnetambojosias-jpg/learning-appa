@@ -223,7 +223,26 @@ export const memoryDb = {
       reponse: "Algorithme Somme_N\nVariables i, N, S : Entier\nDébut\n  Ecrire('Entrer N : ')\n  Lire(N)\n  S <- 0\n  Pour i de 1 à N Faire\n    S <- S + i\n  FinPour\n  Ecrire('La somme est : ', S)\nFin",
       fichier: null,
       note: 18,
+      appreciation: "Excellente copie ! L'algorithme est parfaitement structuré, les variables sont bien typées et la boucle 'Pour' est le choix optimal.",
+      points_forts: ["Structure algorithmique impeccable", "Choix judicieux de la boucle Pour", "Initialisation correcte de la somme S"],
+      axes_amelioration: ["Penser à vérifier que N est strictement positif avant la boucle"],
+      correction_detaillee: "La solution proposée est optimale avec une complexité O(N). La trace d'exécution pour N=3 donne S=0+1+2+3=6.",
+      statut_correction: "valide_admin",
       date_reponse: new Date('2025-02-03')
+    },
+    {
+      id: 2,
+      utilisateur_id: 2,
+      evaluation_id: 2,
+      reponse: "Une adresse IP est le numéro d'identification d'un appareil sur un réseau. Le commutateur (switch) lit l'adresse MAC pour envoyer les paquets uniquement au bon destinataire.",
+      fichier: null,
+      note: 15.5,
+      appreciation: "Bonne maîtrise des définitions de base des réseaux locaux.",
+      points_forts: ["Définition claire de l'adresse IP", "Rôle du commutateur bien compris au niveau de la table MAC"],
+      axes_amelioration: ["Préciser la différence entre IPv4 (32 bits) et IPv6", "Expliquer le rôle de la passerelle par défaut"],
+      correction_detaillee: "Le commutateur travaille au niveau 2 (Liaison) du modèle OSI grâce aux trames Ethernet et adresses MAC.",
+      statut_correction: "corrige_ia",
+      date_reponse: new Date('2025-02-16')
     }
   ],
   messages: [
@@ -826,6 +845,48 @@ export const dbService = {
     return memoryDb.evaluations;
   },
 
+  async createEvaluation({ titre, description, bareme = "Note sur 20", corrige_type = "" }) {
+    let newId = Date.now();
+    if (isConnected && pool) {
+      try {
+        const [res] = await pool.query(
+          'INSERT INTO evaluations (titre, description) VALUES (?, ?)',
+          [titre, description]
+        );
+        newId = res.insertId;
+      } catch (err) {
+        console.error('MySQL createEvaluation error:', err.message);
+      }
+    } else {
+      newId = Math.max(0, ...memoryDb.evaluations.map(e => e.id || 0)) + 1;
+    }
+
+    const newEval = {
+      id: newId,
+      titre,
+      description,
+      bareme,
+      corrige_type,
+      date_creation: new Date()
+    };
+    memoryDb.evaluations.push(newEval);
+    return newEval;
+  },
+
+  async deleteEvaluation(id) {
+    const evalId = Number(id);
+    if (isConnected && pool) {
+      try {
+        await pool.query('DELETE FROM evaluations WHERE id = ?', [evalId]);
+      } catch (err) {
+        console.error('MySQL deleteEvaluation error:', err.message);
+      }
+    }
+    const idx = memoryDb.evaluations.findIndex(e => e.id === evalId);
+    if (idx !== -1) memoryDb.evaluations.splice(idx, 1);
+    return true;
+  },
+
   async getReponses(userId = null) {
     if (isConnected && pool) {
       try {
@@ -846,6 +907,11 @@ export const dbService = {
       return memoryDb.reponses.filter(r => r.utilisateur_id === Number(userId));
     }
     return memoryDb.reponses;
+  },
+
+  async getReponseById(id) {
+    const repId = Number(id);
+    return memoryDb.reponses.find(r => r.id === repId) || null;
   },
 
   async submitReponse({ utilisateur_id, evaluation_id, reponse, fichier = null }) {
@@ -871,13 +937,18 @@ export const dbService = {
       reponse,
       fichier,
       note: null,
+      appreciation: null,
+      points_forts: [],
+      axes_amelioration: [],
+      correction_detaillee: null,
+      statut_correction: 'en_attente',
       date_reponse: new Date()
     };
     memoryDb.reponses.push(item);
     return item;
   },
 
-  async updateNote(reponseId, note) {
+  async updateNote(reponseId, note, appreciation = null) {
     if (isConnected && pool) {
       try {
         await pool.query('UPDATE reponses SET note = ? WHERE id = ?', [note, reponseId]);
@@ -886,7 +957,33 @@ export const dbService = {
       }
     }
     const rep = memoryDb.reponses.find(r => r.id === Number(reponseId));
-    if (rep) rep.note = Number(note);
+    if (rep) {
+      rep.note = Number(note);
+      if (appreciation) rep.appreciation = appreciation;
+      rep.statut_correction = 'valide_admin';
+    }
+    return rep;
+  },
+
+  async saveCorrectionAI({ reponseId, note, appreciation, points_forts, axes_amelioration, correction_detaillee, bareme, statut_correction = 'corrige_ia' }) {
+    const rep = memoryDb.reponses.find(r => r.id === Number(reponseId));
+    if (rep) {
+      rep.note = Number(note);
+      rep.appreciation = appreciation;
+      rep.points_forts = points_forts || [];
+      rep.axes_amelioration = axes_amelioration || [];
+      rep.correction_detaillee = correction_detaillee;
+      rep.bareme = bareme;
+      rep.statut_correction = statut_correction;
+    }
+
+    if (isConnected && pool) {
+      try {
+        await pool.query('UPDATE reponses SET note = ? WHERE id = ?', [note, reponseId]);
+      } catch (err) {
+        console.error('MySQL saveCorrectionAI error:', err.message);
+      }
+    }
     return rep;
   },
 
